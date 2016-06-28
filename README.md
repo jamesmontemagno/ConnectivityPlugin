@@ -6,6 +6,8 @@ Simple cross platform plugin to check connection status of mobile device, gather
 * Available on NuGet: http://www.nuget.org/packages/Xam.Plugin.Connectivity [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
 * Install into your PCL project and Client projects.
 
+Build Status: [![Build status](https://ci.appveyor.com/api/projects/status/k6l4x6ovp5ysfbar?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/connectivityplugin)
+
 **Platform Support**
 
 |Platform|Supported|Version|
