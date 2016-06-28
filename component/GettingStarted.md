@@ -1,23 +1,6 @@
-## Connectivity Plugin for Xamarin and Windows
+# Getting Started with Connectivity Plugin
 
-Simple cross platform plugin to check connection status of mobile device, gather connection type, bandwidths, and more.
 
-### Setup
-* Available on NuGet: http://www.nuget.org/packages/Xam.Plugin.Connectivity [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
-* Install into your PCL project and Client projects.
-
-**Platform Support**
-
-|Platform|Supported|Version|
-| ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 6+|
-|Xamarin.iOS Unified|Yes|iOS 6+|
-|Xamarin.Android|Yes|API 10+|
-|Windows Phone Silverlight|Yes|8.0+|
-|Windows Phone RT|Yes|8.1+|
-|Windows Store RT|Yes|8.1+|
-|Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|No||
 
 
 ### API Usage
@@ -26,7 +9,7 @@ Call **CrossConnectivity.Current** from any project or PCL to gain access to API
 
 
 **IsConnected**
-```csharp
+```
 /// <summary>
 /// Gets if there is an active internet connection
 /// </summary>
@@ -34,7 +17,7 @@ bool IsConnected { get; }
 ```
 
 **ConnectionTypes**
-```csharp
+```
 /// <summary>
 /// Gets the list of all active connection types.
 /// </summary>
@@ -42,7 +25,7 @@ IEnumerable<ConnectionType> ConnectionTypes { get; }
 ```
 
 **Bandwidths**
-```csharp
+```
 /// <summary>
 /// Retrieves a list of available bandwidths for the platform.
 /// Only active connections.
@@ -53,7 +36,7 @@ IEnumerable<UInt64> Bandwidths { get; }
 #### Pinging Hosts
 
 **IsReachable**
-```csharp
+```
 /// <summary>
 /// Tests if a host name is pingable
 /// </summary>
@@ -64,9 +47,9 @@ Task<bool> IsReachable(string host, int msTimeout = 5000);
 ```
 
 **IsRemoteReachable**
-```csharp
+```
 /// <summary>
-/// Tests if a remote host name is reachable (no http:// or www.)
+/// Tests if a remote host name is reachable
 /// </summary>
 /// <param name="host">Host name can be a remote IP or URL of website</param>
 /// <param name="port">Port to attempt to check is reachable.</param>
@@ -77,7 +60,7 @@ Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000);
 
 #### Changes in Connectivity
 When any network connectiivty is gained, changed, or loss you can register for an event to fire:
-```csharp
+```
 /// <summary>
 /// Event handler when connection changes
 /// </summary>
@@ -85,7 +68,7 @@ event ConnectivityChangedEventHandler ConnectivityChanged;
 ```
 
 You will get a ConnectivityChangeEventArgs with the status if you are connected or not:
-```csharp
+```
 public class ConnectivityChangedEventArgs : EventArgs
 {
   public bool IsConnected { get; set; }
@@ -95,7 +78,7 @@ public delegate void ConnectivityChangedEventHandler(object sender, Connectivity
 ```
 
 Usage sample from Xamarin.Forms:
-```csharp
+```
 CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
   {
     page.DisplayAlert("Connectivity Changed", "IsConnected: " + args.IsConnected.ToString(), "OK");
@@ -105,16 +88,11 @@ CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
 
 ### **IMPORTANT**
 Android:
-The ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE permissions are required and will be automatically added to your Android Manifest.
-
-By adding these permissions [Google Play will automatically filter out devices](http://developer.android.com/guide/topics/manifest/uses-feature-element.html#permissions-features) without specific hardward. You can get around this by adding the following to your AssemblyInfo.cs file in your Android project:
-
-```
-[assembly: UsesFeature("android.hardware.wifi", Required = false)]
-```
+You must request ACCESS_NETWORK_STATE permission to get the network state
+You must request ACCESS_WIFI_STATE to get speeds
 
 iOS:
-Bandwidths are not supported and will always return an empty list.
+Bandwidths is not supported and will always return an empty list.
 
 Windows 8.1 & Windows Phone 8.1 RT:
 RT apps can not perform loopback, so you can not use IsReachable to query the states of a local IP.
@@ -122,4 +100,3 @@ RT apps can not perform loopback, so you can not use IsReachable to query the st
 Permissions to think about:
 The Private Networks (Client & Server) capability is represented by the Capability name = "privateNetworkClientServer" tag in the app manifest. 
 The Internet (Client & Server) capability is represented by the Capability name = "internetClientServer" tag in the app manifest.
-

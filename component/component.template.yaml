@@ -1,0 +1,50 @@
+%YAML 1.2
+---
+version: {VERSION}
+name: Connectivity Plugin
+id: ConnectivityPlugin
+publisher: James Montemagno
+license: License.md
+skip_docs: true
+icons: 
+  - VibratePlugin_128x128.png
+  - VibratePlugin_512x512.png
+publisher-url: http://www.github.com/jamesmontemagno/ConnectivityPlugin
+is_shell: true
+packages:
+  ios: Xam.Plugin.Connectivity, Version={VERSION}
+  ios-unified: Xam.Plugin.Connectivity, Version={VERSION}
+  android: Xam.Plugin.Connectivity, Version={VERSION}
+  winphone-8.0: Xam.Plugin.Connectivity, Version={VERSION}
+  winphone-8.1: Xam.Plugin.Connectivity, Version={VERSION}
+  winuniversal-10.0: Xam.Plugin.Connectivity, Version={VERSION}
+summary: Check connection status of mobile device, gather connection type, bandwidths, and more.
+details: Details.md
+getting-started: GettingStarted.md
+samples: 
+  - name: Vibrate Samples (iOS, Android, and Windows)
+    path: "../Samples/ConnectivitySample.sln"
+    removeProjects: 
+      - Connectivity.Plugin
+      - Connectivity.Plugin.Abstractions
+      - Connectivity.Plugin.Android
+      - Connectivity.Plugin.iOSUnified
+      - Connectivity.Plugin.WinPhone
+    installNuGets:
+      - project: ConnectivitySample
+        packages: 
+          - Xam.Plugin.Connectivity
+      - project: ConnectivitySample.iOS
+        packages: 
+          - Xam.Plugin.Connectivity
+      - project: VibrateSample.Droid
+        packages: 
+          - Xam.Plugin.Connectivity
+      - project: ConnectivitySample.WinPhone
+        packages: 
+          - Xam.Plugin.Connectivity
+    no_build: true
+    skip_docs: true  
+local-nuget-repo: ../Build/nuget
+no_build: true
+...
