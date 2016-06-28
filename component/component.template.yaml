@@ -22,7 +22,7 @@ summary: Check connection status of mobile device, gather connection type, bandw
 details: Details.md
 getting-started: GettingStarted.md
 samples: 
-  - name: Vibrate Samples (iOS, Android, and Windows)
+  - name: Connectivity Samples (iOS, Android, and Windows)
     path: "../Samples/ConnectivitySample.sln"
     removeProjects: 
       - Connectivity.Plugin
@@ -37,7 +37,7 @@ samples:
       - project: ConnectivitySample.iOS
         packages: 
           - Xam.Plugin.Connectivity
-      - project: VibrateSample.Droid
+      - project: ConnectivitySample.Droid
         packages: 
           - Xam.Plugin.Connectivity
       - project: ConnectivitySample.WinPhone
