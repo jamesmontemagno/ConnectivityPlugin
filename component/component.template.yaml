@@ -7,8 +7,8 @@ publisher: James Montemagno
 license: License.md
 skip_docs: true
 icons: 
-  - VibratePlugin_128x128.png
-  - VibratePlugin_512x512.png
+  - ConnectivityPlugin_128x128.png
+  - ConnectivityPlugin_512x512.png
 publisher-url: http://www.github.com/jamesmontemagno/ConnectivityPlugin
 is_shell: true
 packages:
