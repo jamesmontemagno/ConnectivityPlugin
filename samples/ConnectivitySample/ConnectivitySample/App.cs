@@ -37,6 +37,7 @@ namespace ConnectivitySample
 
 			var host = new Entry
 			{
+				Text = "127.0.0.1"
 			};
 
 
