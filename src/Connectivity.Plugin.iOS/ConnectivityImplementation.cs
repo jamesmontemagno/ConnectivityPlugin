@@ -91,10 +91,10 @@ namespace Plugin.Connectivity
                 return false;
 
             host = host.Replace("http://www.", string.Empty).
-              Replace("http://", string.Empty).
-              Replace("https://www.", string.Empty).
-              Replace("https://", string.Empty).
-              TrimEnd('/');
+                    Replace("http://", string.Empty).
+                    Replace("https://www.", string.Empty).
+                    Replace("https://", string.Empty).
+                    TrimEnd('/');
 
             
             return await Task.Run(() =>
