@@ -25,6 +25,7 @@ namespace Plugin.Connectivity
         public ConnectivityImplementation()
         {
             ConnectivityChangeBroadcastReceiver.ConnectionChanged = OnConnectivityChanged;
+            ConnectivityChangeBroadcastReceiver.ConnectionTypeChanged = OnConnectivityTypeChanged;
             receiver = new ConnectivityChangeBroadcastReceiver();
             Application.Context.RegisterReceiver(receiver, new IntentFilter(ConnectivityManager.ConnectivityAction));
         }

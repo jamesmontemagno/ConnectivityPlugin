@@ -57,12 +57,23 @@ namespace Plugin.Connectivity.Abstractions
         /// <param name="e"></param>
         protected virtual void OnConnectivityChanged(ConnectivityChangedEventArgs e) =>
             ConnectivityChanged?.Invoke(this, e);
-        
+
+        /// <summary>
+        /// When connectivity type changes
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnConnectivityTypeChanged(ConnectivityTypeChangedEventArgs e) =>
+            ConnectivityTypeChanged?.Invoke(this, e);
 
         /// <summary>
         /// Connectivity event
         /// </summary>
         public event ConnectivityChangedEventHandler ConnectivityChanged;
+
+        /// <summary>
+        /// Connectivity type changed event
+        /// </summary>
+        public event ConnectivityTypeChangedEventHandler ConnectivityTypeChanged;
 
 
         /// <summary>

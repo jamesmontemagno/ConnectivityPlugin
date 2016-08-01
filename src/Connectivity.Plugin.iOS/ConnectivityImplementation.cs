@@ -47,8 +47,13 @@ namespace Plugin.Connectivity
                           (remoteHostStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
                             remoteHostStatus == NetworkStatus.ReachableViaWiFiNetwork);
 
-            if (triggerChange && (previouslyConnected != isConnected || previousInternetStatus != internetStatus))
-                OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+            if (triggerChange)
+            {
+                if(previouslyConnected != isConnected || previousInternetStatus != internetStatus)
+                    OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+
+                OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs {IsConnected = isConnected, ConnectionTypes = this.ConnectionTypes});
+            }
             previousInternetStatus = internetStatus;
         }
 
