@@ -45,6 +45,11 @@ namespace Plugin.Connectivity.Abstractions
         /// Event handler when connection changes
         /// </summary>
         event ConnectivityChangedEventHandler ConnectivityChanged;
+
+        /// <summary>
+        /// Event handler when connection type changes
+        /// </summary>
+        event ConnectivityTypeChangedEventHandler ConnectivityTypeChanged;
     }
 
     /// <summary>
@@ -59,10 +64,32 @@ namespace Plugin.Connectivity.Abstractions
     }
 
     /// <summary>
+    /// Arguments to pass to connectivity type changed event handlers
+    /// </summary>
+    public class ConnectivityTypeChangedEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets if there is an active internet connection
+        /// </summary>
+        public bool IsConnected { get; set; }
+
+        /// <summary>
+        /// Gets the list of all active connection types.
+        /// </summary>
+        public IEnumerable<ConnectionType> ConnectionTypes { get; set; }
+    }
+
+    /// <summary>
     /// Connectivity changed event handlers
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
     public delegate void ConnectivityChangedEventHandler(object sender, ConnectivityChangedEventArgs e);
 
+    /// <summary>
+    /// Connectivity type changed event handlers
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    public delegate void ConnectivityTypeChangedEventHandler(object sender, ConnectivityTypeChangedEventArgs e);
 }

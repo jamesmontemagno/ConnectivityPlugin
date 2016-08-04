@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -17,6 +18,11 @@ namespace Plugin.Connectivity
         /// Action to call when connetivity changes
         /// </summary>
         public static Action<ConnectivityChangedEventArgs> ConnectionChanged;
+
+        /// <summary>
+        /// Action to call when connetivity type changes
+        /// </summary>
+        public static Action<ConnectivityTypeChangedEventArgs> ConnectionTypeChanged;
 
         private bool isConnected;
         private ConnectivityManager connectivityManager;
@@ -71,17 +77,49 @@ namespace Plugin.Connectivity
             if (intent.Action != ConnectivityManager.ConnectivityAction)
                 return;
 
-            var action = ConnectionChanged;
-            if (action == null)
+            var connectionChangedAction = ConnectionChanged;
+            if (connectionChangedAction == null)
                 return;
 
             var newConnection = IsConnected;
-            if (newConnection == isConnected)
+            if (newConnection != isConnected)
+            {
+                isConnected = newConnection;
+
+                connectionChangedAction(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+            }
+
+            var connectionTypeChangedAction = ConnectionTypeChanged;
+            if (connectionTypeChangedAction == null)
                 return;
 
-            isConnected = newConnection;
+            IEnumerable<ConnectionType> connectionTypes;
 
-            action(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+            try
+            {
+                ConnectionType type;
+                var activeConnection = ConnectivityManager.ActiveNetworkInfo;
+                switch (activeConnection.Type)
+                {
+                    case ConnectivityType.Wimax:
+                        type = ConnectionType.Wimax;
+                        break;
+                    case ConnectivityType.Wifi:
+                        type = ConnectionType.WiFi;
+                        break;
+                    default:
+                        type = ConnectionType.Cellular;
+                        break;
+                }
+                connectionTypes = new ConnectionType[] { type };
+            }
+            catch (Exception ex)
+            {
+                //no connections
+                connectionTypes = new ConnectionType[] { };
+            }
+
+            connectionTypeChangedAction(new ConnectivityTypeChangedEventArgs { IsConnected = newConnection, ConnectionTypes = connectionTypes});
         }
     }
 }

@@ -30,22 +30,25 @@ namespace Plugin.Connectivity
         {
             var previous = isConnected;
             var newConnected = IsConnected;
-            if (previous == newConnected)
-                return;
-
 
             var dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+
             if (dispatcher != null)
             {
                 await dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
                 {
-                    OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
+                    if (previous != newConnected)
+                        OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
 
+                    OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = newConnected, ConnectionTypes = this.ConnectionTypes });
                 });
             }
             else
             {
-                OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
+                if (previous != newConnected)
+                    OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
+
+                OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = newConnected, ConnectionTypes = this.ConnectionTypes });
             }
         }
 
@@ -65,7 +68,7 @@ namespace Plugin.Connectivity
                 return isConnected;
             }
         }
-               
+
 
         /// <summary>
         /// Checks if remote is reachable. RT apps cannot do loopback so this will alway return false.

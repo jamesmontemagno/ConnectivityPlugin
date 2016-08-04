@@ -46,14 +46,14 @@ namespace Plugin.Connectivity
             var previous = isConnected;
             var newConnected = IsConnected;
 
-            if (previous == newConnected)
-                return;
-            
             Deployment.Current.Dispatcher.BeginInvoke(() =>
             {
-                OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
+                if (previous != newConnected)
+                    OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = newConnected });
+
+                OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = newConnected, ConnectionTypes = this.ConnectionTypes });
+
             });
-        
         }
 
         Version WinPhone81 = new Version(8, 1, 0, 0);// I know technically it was 8.10.x.x, but this is fine
@@ -61,7 +61,7 @@ namespace Plugin.Connectivity
         /// Gets if there is an active internet connection
         /// </summary>
         public override bool IsConnected
-        { 
+        {
             get
             {
                 //if this is a 8.0 device you must use old school is network available
@@ -79,7 +79,7 @@ namespace Plugin.Connectivity
 
                     return isConnected;
                 }
-                catch(NotImplementedException ex)
+                catch (NotImplementedException ex)
                 {
                     return (isConnected = DeviceNetworkInformation.IsNetworkAvailable);
                 }
