@@ -10,16 +10,9 @@
 
 using System;
 using System.Net;
-using System.Net.Sockets;
-#if __UNIFIED__
 using SystemConfiguration;
 using CoreFoundation;
 using System.Diagnostics;
-#else
-using MonoTouch.SystemConfiguration;
-using MonoTouch.CoreFoundation;
-using System.Diagnostics;
-#endif
 
 namespace Plugin.Connectivity
 {
@@ -141,18 +134,30 @@ namespace Plugin.Connectivity
                 h(null, EventArgs.Empty);
         }
 
-        //
+
+		/*Removal of reachabilityForLocalWiFi
+		============
+		Older versions of this sample included the method reachabilityForLocalWiFi.As originally designed, this method allowed apps using Bonjour to check the status of "local only" Wi-Fi(Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse.
+
+		However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.
+
+
+		Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).  
+		 
+		Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.
+		*/
         // Returns true if it is possible to reach the AdHoc WiFi network
         // and optionally provides extra network reachability flags as the
         // out parameter
+		//
         //
-        static NetworkReachability adHocWiFiNetworkReachability;
+        //static NetworkReachability adHocWiFiNetworkReachability;
         /// <summary>
         /// Checks ad hoc wifi is available
         /// </summary>
         /// <param name="flags"></param>
         /// <returns></returns>
-        public static bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
+        /*public static bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
         {
             if (adHocWiFiNetworkReachability == null)
             {
@@ -168,7 +173,7 @@ namespace Plugin.Connectivity
                 return false;
 
             return IsReachableWithoutRequiringConnection(flags);
-        }
+        }*/
 
        
 
@@ -178,7 +183,6 @@ namespace Plugin.Connectivity
 
             if (defaultRouteReachability == null)
             {
-                //var data = new byte[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 0, 0, 0, 0 };
                 var ip = new IPAddress(0);
                 defaultRouteReachability = new NetworkReachability(ip);
                 defaultRouteReachability.SetNotification(OnChange);
@@ -259,27 +263,6 @@ namespace Plugin.Connectivity
         }
 
         /// <summary>
-        /// Check local wifi status
-        /// Removal of reachabilityForLocalWiFi
-        /// ============
-        ///Older versions of this sample included the method reachabilityForLocalWiFi.As originally designed, this method allowed apps using Bonjour to check the status of "local only" Wi-Fi(Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse.
-        ///However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.
-        ///Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).  
-        ///Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.
-        /// </summary>
-        /// <returns></returns>
-        public static NetworkStatus LocalWifiConnectionStatus()
-        {
-            NetworkReachabilityFlags flags;
-            if (IsAdHocWiFiNetworkAvailable(out flags))
-            {
-                if ((flags & NetworkReachabilityFlags.IsDirect) != 0)
-                    return NetworkStatus.ReachableViaWiFiNetwork;
-            }
-            return NetworkStatus.NotReachable;
-        }
-
-        /// <summary>
         /// Dispose
         /// </summary>
         public static void Dispose()
@@ -294,12 +277,6 @@ namespace Plugin.Connectivity
             {
                 defaultRouteReachability.Dispose();
                 defaultRouteReachability = null;
-            }
-
-            if (adHocWiFiNetworkReachability != null)
-            {
-                adHocWiFiNetworkReachability.Dispose();
-                adHocWiFiNetworkReachability = null;
             }
         }
 

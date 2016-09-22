@@ -15,7 +15,6 @@ Build Status:
 |Platform|Supported|Version|
 | ------------------- | :-----------: | :------------------: |
 |Xamarin.iOS|Yes|iOS 6+|
-|Xamarin.iOS Unified|Yes|iOS 6+|
 |Xamarin.Android|Yes|API 10+|
 |Windows Phone Silverlight|Yes|8.0+|
 |Windows Phone RT|Yes|8.1+|
@@ -108,7 +107,7 @@ CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
 
 
 ### **IMPORTANT**
-Android:
+### Android:
 The ACCESS_NETWORK_STATE and ACCESS_WIFI_STATE permissions are required and will be automatically added to your Android Manifest.
 
 By adding these permissions [Google Play will automatically filter out devices](http://developer.android.com/guide/topics/manifest/uses-feature-element.html#permissions-features) without specific hardware. You can get around this by adding the following to your AssemblyInfo.cs file in your Android project:
@@ -117,13 +116,23 @@ By adding these permissions [Google Play will automatically filter out devices](
 [assembly: UsesFeature("android.hardware.wifi", Required = false)]
 ```
 
-iOS:
+### iOS:
 Bandwidths are not supported and will always return an empty list.
 
-Windows 8.1 & Windows Phone 8.1 RT:
+#### Removal of reachabilityForLocalWiFi
+
+Older versions of this sample included the method reachabilityForLocalWiFi. As originally designed, this method allowed apps using Bonjour to check the status of "local only" Wi-Fi (Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse. 
+ 
+However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.  Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.
+
+Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).  
+ 
+Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.
+
+### Windows 8.1 & Windows Phone 8.1 RT:
 RT apps can not perform loopback, so you can not use IsReachable to query the states of a local IP.
 
-Permissions to think about:
+####Permissions to think about:
 The Private Networks (Client & Server) capability is represented by the Capability name = "privateNetworkClientServer" tag in the app manifest. 
 The Internet (Client & Server) capability is represented by the Capability name = "internetClientServer" tag in the app manifest.
 

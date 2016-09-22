@@ -1,27 +1,11 @@
 Connectivity Readme
 
-Change Log:
-[2.2.2]
--Enhance IPv6 for iOS
+Ensure the NuGet is installed in PCL and Platform specific projects.
 
-[2.1.2]
--Fix disconnected state in windows #228 and #244
+[Release Notes - 2.4.0]
+* New ConnectivityTypeChanged event
+* Fix for Ad-hoc wifi, see readme on GitHub
 
-[2.1.1]
--Fix Windows, occurances on Simulator or Device that network returns Local even though are online, now will return true for IsConnected.
-
-[2.0.2]
--Fix when running a WP8SL app on an actual 8.0 device.
-
-[2.0.1]
--Remove help file, add readme file
--Add blank .NET 4.5 implementation for unit testing
--Remove dependency that wasn't needed
-
-[2.0.0]
--BREAKING CHANGE: New Namespace: Plugin.Connectivity
--Automatically add permissions for Android!
--Add UWP Support
 
 Learn More:
 http://www.xamarin.com/plugins
