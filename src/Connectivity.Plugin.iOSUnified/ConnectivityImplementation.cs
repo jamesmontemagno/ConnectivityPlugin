@@ -20,12 +20,16 @@ namespace Plugin.Connectivity
 		/// </summary>
 		public ConnectivityImplementation()
 		{
-			UpdateConnected(false);
+			//start an update on the background.
+			Task.Run(() => { UpdateConnected(false);});
 			Reachability.ReachabilityChanged += ReachabilityChanged;
 		}
 
-		void ReachabilityChanged(object sender, EventArgs e)
+		async void ReachabilityChanged(object sender, EventArgs e)
 		{
+			//Add in artifical delay so the connection status has time to change
+			//else it will return true no matter what.
+			await Task.Delay(100);
 			UpdateConnected();
 		}
 
