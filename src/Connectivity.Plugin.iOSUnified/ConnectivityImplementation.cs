@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Linq;
 
 
 namespace Plugin.Connectivity
@@ -52,7 +53,7 @@ namespace Plugin.Connectivity
 				if (previouslyConnected != isConnected || previousInternetStatus != internetStatus)
 					OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = isConnected });
 
-				var connectionTypes = this.ConnectionTypes;
+				var connectionTypes = this.ConnectionTypes.ToArray();
 				OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = isConnected, ConnectionTypes = connectionTypes });
 			}
 			previousInternetStatus = internetStatus;
