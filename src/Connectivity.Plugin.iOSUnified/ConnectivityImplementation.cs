@@ -52,7 +52,8 @@ namespace Plugin.Connectivity
 				if (previouslyConnected != isConnected || previousInternetStatus != internetStatus)
 					OnConnectivityChanged(new ConnectivityChangedEventArgs { IsConnected = isConnected });
 
-				OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = isConnected, ConnectionTypes = this.ConnectionTypes });
+				var connectionTypes = this.ConnectionTypes;
+				OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = isConnected, ConnectionTypes = connectionTypes });
 			}
 			previousInternetStatus = internetStatus;
 		}
