@@ -8,7 +8,7 @@
        <owners>James Montemagno</owners>
        <licenseUrl>https://github.com/jamesmontemagno/ConnectivityPlugin/blob/master/LICENSE</licenseUrl>
        <projectUrl>https://github.com/jamesmontemagno/ConnectivityPlugin</projectUrl>
-       <iconUrl>http://www.refractored.com/images/connectivity_icon.png</iconUrl>
+       <iconUrl>https://raw.githubusercontent.com/jamesmontemagno/ConnectivityPlugin/master/art/icon.png</iconUrl>
        <requireLicenseAcceptance>false</requireLicenseAcceptance>
        <description>
          Get network connectivity information such as network type, speeds, and if connection is available. Additional functionality includes the ability to ping a specific host and port number. Ensure you have proper permissions set by reading the README.
