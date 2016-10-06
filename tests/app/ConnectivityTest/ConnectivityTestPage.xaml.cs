@@ -14,6 +14,13 @@ namespace ConnectivityTest
 
 		}
 
+		protected override async void OnAppearing()
+		{
+			base.OnAppearing(); 
+			await DisplayAlert("Is Connected", CrossConnectivity.Current.IsConnected ? "YES" : "NO", "OK");
+
+		}
+
 		void HandleStart_Clicked(object sender, System.EventArgs e)
 		{
 			//CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;

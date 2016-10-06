@@ -16,13 +16,14 @@ namespace Plugin.Connectivity
 	/// </summary>
 	public class ConnectivityImplementation : BaseConnectivity
 	{
+		Task initialTask = null;
 		/// <summary>
 		/// Default constructor
 		/// </summary>
 		public ConnectivityImplementation()
 		{
 			//start an update on the background.
-			Task.Run(() => { UpdateConnected(false);});
+			initialTask = Task.Run(() => { UpdateConnected(false);});
 			Reachability.ReachabilityChanged += ReachabilityChanged;
 		}
 
@@ -63,7 +64,18 @@ namespace Plugin.Connectivity
 		/// <summary>
 		/// Gets if there is an active internet connection
 		/// </summary>
-		public override bool IsConnected { get { return isConnected; } }
+		public override bool IsConnected 
+		{
+			get 
+			{
+				if (initialTask?.IsCompleted ?? true)
+					return isConnected;
+
+				//await for the initial run to complete
+				initialTask.Wait();
+				return isConnected; 
+			}
+		}
 
 		/// <summary>
 		/// Tests if a host name is pingable
