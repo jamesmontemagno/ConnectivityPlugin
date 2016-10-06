@@ -2,14 +2,10 @@ Connectivity Readme
 
 Ensure the NuGet is installed in PCL and Platform specific projects.
 
-[Release Notes - 2.4.0]
+[Release Notes - 2.3.0]
 * New ConnectivityTypeChanged event
 * Fix for Ad-hoc wifi, see readme on GitHub
-
-
-Learn More:
-http://www.xamarin.com/plugins
-http://www.github.com/xamarin/ConnectivityPlugin
+* Additional bug fixes and optimizations
 
 **IMPORTANT**
 Android:
