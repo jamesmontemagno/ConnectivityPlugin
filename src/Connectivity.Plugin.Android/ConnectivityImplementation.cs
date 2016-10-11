@@ -184,31 +184,44 @@ namespace Plugin.Connectivity
         {
             get
             {
-                try
+                //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
+                //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
+                if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
                 {
-                    ConnectionType type;
-                    var activeConnection = ConnectivityManager.ActiveNetworkInfo;
-                    switch (activeConnection.Type)
+                    foreach (var network in ConnectivityManager.GetAllNetworks())
                     {
-                        case ConnectivityType.Wimax:
-                            type = ConnectionType.Wimax;
-                            break;
-                        case ConnectivityType.Wifi:
-                            type = ConnectionType.WiFi;
-                            break;
-                        default:
-                            type = ConnectionType.Cellular;
-                            break;
+                        var info = ConnectivityManager.GetNetworkInfo(network);
+                        
+                        yield return GetConnectionType(info.Type);
                     }
-                    return new ConnectionType[] { type };
                 }
-                catch (Exception ex)
+                else
                 {
-                    //no connections
-                    return new ConnectionType[] { };
+                    foreach (var info in ConnectivityManager.GetAllNetworkInfo())
+                    {
+                        yield return GetConnectionType(info.Type);
+                    }
                 }
+               
             }
         }
+
+        ConnectionType GetConnectionType(ConnectivityType connectivityType)
+        {
+
+            switch (connectivityType)
+            {
+                case ConnectivityType.Ethernet:
+                    return ConnectionType.Desktop;
+                case ConnectivityType.Wimax:
+                    return ConnectionType.Wimax;
+                case ConnectivityType.Wifi:
+                    return ConnectionType.WiFi;
+                default:
+                    return ConnectionType.Cellular;
+            }
+        }
+
 
         /// <summary>
         /// Retrieves a list of available bandwidths for the platform.
