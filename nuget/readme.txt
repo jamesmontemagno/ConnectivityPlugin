@@ -7,6 +7,8 @@ Ensure the NuGet is installed in PCL and Platform specific projects.
 * Fix for Ad-hoc wifi, see readme on GitHub
 * Additional bug fixes and optimizations
 
+See: https://github.com/jamesmontemagno/ConnectivityPlugin/blob/master/CHANGELOG.md for full list
+
 **IMPORTANT**
 Android:
 The following persmissions are automatically added for you:
