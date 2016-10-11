@@ -185,29 +185,34 @@ namespace Plugin.Connectivity
         {
             get
             {
-                //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
-                //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
-                if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
-                {
-                    foreach (var network in ConnectivityManager.GetAllNetworks())
-                    {
-                        var info = ConnectivityManager.GetNetworkInfo(network);
-                        
-                        yield return GetConnectionType(info.Type);
-                    }
-                }
-                else
-                {
-                    foreach (var info in ConnectivityManager.GetAllNetworkInfo())
-                    {
-                        yield return GetConnectionType(info.Type);
-                    }
-                }
-               
+                return GetConnectionTypes(ConnectivityManager);
             }
         }
 
-        ConnectionType GetConnectionType(ConnectivityType connectivityType)
+        public static IEnumerable<ConnectionType> GetConnectionTypes(ConnectivityManager manager)
+        {
+            //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
+            //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
+            if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
+            {
+                foreach (var network in manager.GetAllNetworks())
+                {
+                    var info = manager.GetNetworkInfo(network);
+
+                    yield return GetConnectionType(info.Type);
+                }
+            }
+            else
+            {
+                foreach (var info in manager.GetAllNetworkInfo())
+                {
+                    yield return GetConnectionType(info.Type);
+                }
+            }
+
+        }
+
+        public static ConnectionType GetConnectionType(ConnectivityType connectivityType)
         {
 
             switch (connectivityType)

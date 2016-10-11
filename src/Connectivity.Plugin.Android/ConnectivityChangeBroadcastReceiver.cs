@@ -78,48 +78,25 @@ namespace Plugin.Connectivity
                 return;
 
             var connectionChangedAction = ConnectionChanged;
-            if (connectionChangedAction == null)
-                return;
-
             var newConnection = IsConnected;
-            if (newConnection != isConnected)
+            if (connectionChangedAction != null)
             {
-                isConnected = newConnection;
+                if (newConnection != isConnected)
+                {
+                    isConnected = newConnection;
 
-                connectionChangedAction(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+                    connectionChangedAction(new ConnectivityChangedEventArgs { IsConnected = isConnected });
+                }
             }
 
             var connectionTypeChangedAction = ConnectionTypeChanged;
-            if (connectionTypeChangedAction == null)
-                return;
-
-            IEnumerable<ConnectionType> connectionTypes;
-
-            try
+            if (connectionTypeChangedAction != null)
             {
-                ConnectionType type;
-                var activeConnection = ConnectivityManager.ActiveNetworkInfo;
-                switch (activeConnection.Type)
-                {
-                    case ConnectivityType.Wimax:
-                        type = ConnectionType.Wimax;
-                        break;
-                    case ConnectivityType.Wifi:
-                        type = ConnectionType.WiFi;
-                        break;
-                    default:
-                        type = ConnectionType.Cellular;
-                        break;
-                }
-                connectionTypes = new ConnectionType[] { type };
-            }
-            catch (Exception ex)
-            {
-                //no connections
-                connectionTypes = new ConnectionType[] { };
-            }
 
-            connectionTypeChangedAction(new ConnectivityTypeChangedEventArgs { IsConnected = newConnection, ConnectionTypes = connectionTypes});
+                var connectionTypes = ConnectivityImplementation.GetConnectionTypes(ConnectivityManager);
+                
+                connectionTypeChangedAction(new ConnectivityTypeChangedEventArgs { IsConnected = newConnection, ConnectionTypes = connectionTypes });
+            }
         }
     }
 }
