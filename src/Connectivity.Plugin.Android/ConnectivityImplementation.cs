@@ -223,6 +223,8 @@ namespace Plugin.Connectivity
                     return ConnectionType.Wimax;
                 case ConnectivityType.Wifi:
                     return ConnectionType.WiFi;
+                case ConnectivityType.Bluetooth:
+                    return ConnectionType.Bluetooth;
                 default:
                     return ConnectionType.Cellular;
             }

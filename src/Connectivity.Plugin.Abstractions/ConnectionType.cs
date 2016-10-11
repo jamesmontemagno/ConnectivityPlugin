@@ -31,5 +31,9 @@ namespace Plugin.Connectivity.Abstractions
         /// Other type of connection
         /// </summary>
         Other,
+        /// <summary>
+        /// Bluetooth connection
+        /// </summary>
+        Bluetooth
     }
 }
