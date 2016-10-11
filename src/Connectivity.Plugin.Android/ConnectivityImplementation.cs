@@ -47,9 +47,9 @@ namespace Plugin.Connectivity
         {
             get
             {
-                wifiManager = wifiManager ??
-                               (WifiManager)
-                               (Application.Context.GetSystemService(Context.WifiService));
+                if(wifiManager == null || wifiManager.Handle == IntPtr.Zero)
+                    wifiManager = (WifiManager)(Application.Context.GetSystemService(Context.WifiService));
+
                 return wifiManager;
             }
         }
