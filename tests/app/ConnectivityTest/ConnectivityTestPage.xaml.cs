@@ -60,5 +60,18 @@ namespace ConnectivityTest
 
 			});
 		}
-	}
+
+        async void Types_Clicked(object sender, System.EventArgs e)
+        {
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                var stuff = string.Empty;
+                foreach (var i in CrossConnectivity.Current.ConnectionTypes)
+                    stuff += "/n" + i.ToString();
+
+                await DisplayAlert("Is Connected", (CrossConnectivity.Current.IsConnected ? "YES" : "NO") + stuff, "OK");
+
+            });
+        }
+    }
 }

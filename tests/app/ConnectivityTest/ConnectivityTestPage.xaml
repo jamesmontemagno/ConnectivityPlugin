@@ -4,5 +4,6 @@
 		<Button Text="Start Listening" Clicked="HandleStart_Clicked"/>
 		<Button Text="Stop Listening" Clicked="HandleStop_Clicked"/>
 		<Button Text="IsConnected" Clicked="HandleIsConnected_Clicked"/>
+		<Button Text="Types" Clicked="Types_Clicked"/>
 	</StackLayout>
 </ContentPage>
