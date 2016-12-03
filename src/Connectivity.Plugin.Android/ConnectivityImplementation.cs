@@ -199,6 +199,10 @@ namespace Plugin.Connectivity
                 {
                     var info = manager.GetNetworkInfo(network);
 
+                    if (info?.Type == null)
+                        yield return ConnectionType.Other;
+                    
+
                     yield return GetConnectionType(info.Type);
                 }
             }
@@ -206,6 +210,9 @@ namespace Plugin.Connectivity
             {
                 foreach (var info in manager.GetAllNetworkInfo())
                 {
+                    if (info?.Type == null)
+                        yield return ConnectionType.Other;
+
                     yield return GetConnectionType(info.Type);
                 }
             }
