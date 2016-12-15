@@ -48,23 +48,7 @@ namespace Plugin.Connectivity
         /// <summary>
         /// Gets if there is an active internet connection
         /// </summary>
-        bool IsConnected
-        {
-            get
-            {
-                try
-                {
-                    var activeConnection = ConnectivityManager.ActiveNetworkInfo;
-
-                    return ((activeConnection != null) && activeConnection.IsConnected);
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine("Unable to get connected state - do you have ACCESS_NETWORK_STATE permission? - error: {0}", e);
-                    return false;
-                }
-            }
-        }
+        bool IsConnected => ConnectivityImplementation.GetIsConnected(ConnectivityManager);
 
         /// <summary>
         /// Received a notification via BR.

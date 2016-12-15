@@ -64,7 +64,6 @@ Task("Samples")
     .IsDependentOn("Libraries")
     .Does(()=>
 {
-    BuildAction(samples);
 });
 
 Task ("NuGet")
@@ -87,22 +86,7 @@ Task("Component")
     .IsDependentOn("NuGet")
     .Does(()=>
 {
-	if(!version.Contains("beta"))
-	{
-		// Clear out xml files from build (they interfere with the component packaging)
-		DeleteFiles ("./Build/**/*.xml");
-
-		// Generate component.yaml files from templates
-		CopyFile ("./component/component.template.yaml", "./component/component.yaml");
-
-		// Replace version in template files
-		ReplaceTextInFiles ("./**/component.yaml", "{VERSION}", version);
-
-		var xamCompSettings = new XamarinComponentSettings { ToolPath = "./tools/xamarin-component.exe" };
-
-		// Package both components
-		PackageComponent ("./component/", xamCompSettings);
-	}
+	
 });
 
 //Build the component, which build samples, nugets, and libraries

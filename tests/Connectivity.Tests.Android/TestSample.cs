@@ -27,7 +27,7 @@ namespace Connectivity.Tests
         {
             var connected = CrossConnectivity.Current.IsConnected;
             var types = CrossConnectivity.Current.ConnectionTypes;
-            Assert.IsTrue(types.Contains(Plugin.Connectivity.Abstractions.ConnectionType.WiFi));
+            Assert.IsTrue(!types.Contains(Plugin.Connectivity.Abstractions.ConnectionType.Other));
 
         }
         

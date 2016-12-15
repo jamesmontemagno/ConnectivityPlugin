@@ -54,26 +54,46 @@ namespace Plugin.Connectivity
             }
         }
 
+        public static bool GetIsConnected(ConnectivityManager manager)
+        {
+            try
+            {
+
+                //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
+                //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
+                if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
+                {
+                    foreach (var network in manager.GetAllNetworks())
+                    {
+                        var info = manager.GetNetworkInfo(network);
+
+                        if (info?.IsConnected ?? false)
+                            return true;
+                    }
+                }
+                else
+                {
+                    foreach (var info in manager.GetAllNetworkInfo())
+                    {
+                        if (info?.IsConnected ?? false)
+                            return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Unable to get connected state - do you have ACCESS_NETWORK_STATE permission? - error: {0}", e);
+                return false;
+            }
+        }
+
         /// <summary>
         /// Gets if there is an active internet connection
         /// </summary>
-        public override bool IsConnected
-        {
-            get
-            {
-                try
-                {
-                    var activeConnection = ConnectivityManager.ActiveNetworkInfo;
+        public override bool IsConnected => GetIsConnected(ConnectivityManager);
 
-                    return ((activeConnection != null) && activeConnection.IsConnected);
-                }
-                catch (Exception e)
-                {
-                    Debug.WriteLine("Unable to get connected state - do you have ACCESS_NETWORK_STATE permission? - error: {0}", e);
-                    return false;
-                }
-            }
-        }
 
         /// <summary>
         /// Tests if a host name is pingable
@@ -138,7 +158,7 @@ namespace Plugin.Connectivity
                 try
                 {
                     var tcs = new TaskCompletionSource<InetSocketAddress>();
-                    new System.Threading.Thread(async () =>
+                    new System.Threading.Thread(() =>
                     {
                         /* this line can take minutes when on wifi with poor or none internet connectivity
                         and Task.Delay solves it only if this is running on new thread (Task.Run does not help) */
