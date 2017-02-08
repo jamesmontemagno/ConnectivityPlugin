@@ -20,37 +20,51 @@ namespace Plugin.Connectivity
         {
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
             NetworkChange.NetworkAvailabilityChanged += NetworkChange_NetworkAvailabilityChanged;
+            
+            ResetConnections();
+        }
 
-            var adapters = NetworkInterface.GetAllNetworkInterfaces()
+        IEnumerable<NetworkInterface> Adapters => NetworkInterface.GetAllNetworkInterfaces()
                 .Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Loopback)
                 .ToArray();
 
-            ResetConnections(adapters);
+        void UpdateIsConnected()
+        {
+            var isNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
 
-            isConnected = adapters.Where(ni => ni.OperationalStatus == OperationalStatus.Up)
-                .Any(ni => ni.GetIPProperties().GatewayAddresses.Any(addr => addr.Address.ToString() != "0.0.0.0"));
+            if (!isNetworkAvailable)
+            {
+                isConnected = false;
+                return;
+            }
+
+            isConnected = IsReachableSynchronous("www.google.com");
         }
 
         void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
         {
-            isConnected = e.IsAvailable;
-            OnConnectivityChanged(new ConnectivityChangedEventArgs() { IsConnected = isConnected });
+            if (e.IsAvailable)
+            {
+                UpdateIsConnected();
+            }
+            else
+            {
+                isConnected = false;
+            }
+            
+            OnConnectivityChanged(new ConnectivityChangedEventArgs() {IsConnected = isConnected});
         }
 
         void NetworkChangeOnNetworkAddressChanged(object sender, EventArgs eventArgs)
         {
-            var adapters = NetworkInterface.GetAllNetworkInterfaces()
-                .Where(ni => ni.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                .ToArray();
-
-            ResetConnections(adapters);
+            ResetConnections();
         }
 
-        void ResetConnections(NetworkInterface[] adapters)
+        void ResetConnections()
         {
             connectionTypes.Clear();
             bandwidths.Clear();
-            foreach (var networkInterface in adapters)
+            foreach (var networkInterface in Adapters)
             {
                 connectionTypes.Add(ToConnectionTypes(networkInterface));
 
@@ -59,9 +73,7 @@ namespace Plugin.Connectivity
 
             var isConnected = this.isConnected;
 
-            // We need to ensure that there is at least 1 interface with a Gateway address to prevent virutal interfaces to be falsely reporting as connected.
-            this.isConnected = adapters.Where(ni => ni.OperationalStatus == OperationalStatus.Up)
-                .Any(ni => ni.GetIPProperties().GatewayAddresses.Any(addr => addr.Address.ToString() != "0.0.0.0"));
+            UpdateIsConnected();
 
             OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs
             {
@@ -143,9 +155,49 @@ namespace Plugin.Connectivity
         /// <param name="host"></param>
         /// <param name="msTimeout"></param>
         /// <returns></returns>
-        public override Task<bool> IsReachable(string host, int msTimeout = 5000) => Task.FromResult(isConnected);
+        public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
+        {
+            var pingRequest = new Ping();
+            try
+            {
+                var pingReply = await pingRequest.SendPingAsync(host, msTimeout);
 
-        /// <summary>
+                if (pingReply != null && pingReply.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // Suppressing catch here, if any exception is returned by Ping, consider it as Not reachable.
+            }
+
+            return false;
+        }
+
+        private bool IsReachableSynchronous(string host, int msTimeout = 5000)
+        {
+            var p = new Ping();
+
+            try
+            {
+                var r = p.Send(host, msTimeout);
+
+                if (r!= null && r.Status == IPStatus.Success)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                // Suppressing catch here, if any exception is returned by Ping, consider it as Not reachable.
+            }
+
+            return false;
+        }
+
+
+    /// <summary>
         /// IsReachable
         /// </summary>
         /// <param name="host"></param>
