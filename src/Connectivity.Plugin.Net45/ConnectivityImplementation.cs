@@ -27,24 +27,8 @@ namespace Plugin.Connectivity
 
             ResetConnections(adapters);
 
-            isConnected = adapters.Any(p =>
-                {
-                    var connetionType = ToConnectionTypes(p);
-
-                    switch (connetionType)
-                    {
-                        case ConnectionType.Cellular:
-                        case ConnectionType.Bluetooth:
-                        case ConnectionType.WiFi:
-                        case ConnectionType.Desktop:
-                        case ConnectionType.Wimax:
-                            return p.OperationalStatus == OperationalStatus.Up;
-                        case ConnectionType.Other:
-                            return false;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                });
+            isConnected = adapters.Where(ni => ni.OperationalStatus == OperationalStatus.Up)
+                .Any(ni => ni.GetIPProperties().GatewayAddresses.Any(addr => addr.Address.ToString() != "0.0.0.0"));
         }
 
         void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
@@ -73,11 +57,22 @@ namespace Plugin.Connectivity
                 bandwidths.Add((ulong) networkInterface.Speed);
             }
 
+            var isConnected = this.isConnected;
+
+            // We need to ensure that there is at least 1 interface with a Gateway address to prevent virutal interfaces to be falsely reporting as connected.
+            this.isConnected = adapters.Where(ni => ni.OperationalStatus == OperationalStatus.Up)
+                .Any(ni => ni.GetIPProperties().GatewayAddresses.Any(addr => addr.Address.ToString() != "0.0.0.0"));
+
             OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs
             {
                 ConnectionTypes = ConnectionTypes,
                 IsConnected = IsConnected
             });
+
+            if (isConnected != IsConnected)
+            {
+                OnConnectivityChanged(new ConnectivityChangedEventArgs() {IsConnected = isConnected});
+            }
         }
 
         ConnectionType ToConnectionTypes(NetworkInterface networkInterface)
