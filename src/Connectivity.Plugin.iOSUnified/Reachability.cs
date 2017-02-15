@@ -19,6 +19,7 @@ namespace Plugin.Connectivity
     /// <summary>
     /// Status of newtowkr enum
     /// </summary>
+    [Foundation.Preserve(AllMembers = true)]
     public enum NetworkStatus
     {
         /// <summary>
@@ -38,6 +39,7 @@ namespace Plugin.Connectivity
     /// <summary>
     /// Reachability helper
     /// </summary>
+    [Foundation.Preserve(AllMembers = true)]
     public static class Reachability
     {
         /// <summary>
@@ -58,11 +60,12 @@ namespace Plugin.Connectivity
             // Do we need a connection to reach it?
             bool noConnectionRequired = (flags & NetworkReachabilityFlags.ConnectionRequired) == 0;
 
+#if __IOS__
             // Since the network stack will automatically try to get the WAN up,
             // probe that
             if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
                 noConnectionRequired = true;
-
+#endif
             return isReachable && noConnectionRequired;
         }
 
@@ -223,8 +226,10 @@ namespace Plugin.Connectivity
             if (!IsReachableWithoutRequiringConnection(flags))
                 return NetworkStatus.NotReachable;
 
+#if __IOS__
             if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
                 return NetworkStatus.ReachableViaCarrierDataNetwork;
+#endif
 
             return NetworkStatus.ReachableViaWiFiNetwork;
         }
@@ -255,9 +260,11 @@ namespace Plugin.Connectivity
                 status = NetworkStatus.ReachableViaWiFiNetwork;
             }
 
+#if __IOS__
             // If it's a WWAN connection..
             if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
                 status = NetworkStatus.ReachableViaCarrierDataNetwork;
+#endif
 
             return status;
         }

@@ -16,6 +16,7 @@ namespace Plugin.Connectivity
     /// <summary>
     /// Implementation for Feature
     /// </summary>
+    [Android.Runtime.Preserve(AllMembers = true)]
     public class ConnectivityImplementation : BaseConnectivity
     {
         private ConnectivityChangeBroadcastReceiver receiver;

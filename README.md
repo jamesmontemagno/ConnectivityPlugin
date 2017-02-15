@@ -20,7 +20,7 @@ Build Status:
 |Windows Phone RT|Yes|8.1+|
 |Windows Store RT|Yes|8.1+|
 |Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|No||
+|Xamarin.Mac|Yes|All|
 
 
 ### API Usage

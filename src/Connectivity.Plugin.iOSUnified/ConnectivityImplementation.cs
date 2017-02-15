@@ -11,10 +11,11 @@ using System.Linq;
 
 namespace Plugin.Connectivity
 {
-	/// <summary>
-	/// Implementation for Connectivity
-	/// </summary>
-	public class ConnectivityImplementation : BaseConnectivity
+    /// <summary>
+    /// Implementation for Connectivity
+    /// </summary>
+    [Foundation.Preserve(AllMembers = true)]
+    public class ConnectivityImplementation : BaseConnectivity
 	{
 		Task initialTask = null;
 		/// <summary>
