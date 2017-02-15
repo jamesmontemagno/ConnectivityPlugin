@@ -87,7 +87,7 @@
      <!--Xamarin.Mac-->
      <file src="src\Connectivity.Plugin.Mac\bin\Release\Plugin.Connectivity.dll" target="lib\Xamarin.Mac20\Plugin.Connectivity.dll" />
      <file src="src\Connectivity.Plugin.Mac\bin\Release\Plugin.Connectivity.xml" target="lib\Xamarin.Mac20\Plugin.Connectivity.xml" />
-     <file src="src\Connectivity.Plugin.Mac\bin\iPhone\Release\Plugin.Connectivity.xml" target="lib\Xamarin.Mac20\Plugin.Connectivity.pdb" />
+     <file src="src\Connectivity.Plugin.Mac\bin\Release\Plugin.Connectivity.xml" target="lib\Xamarin.Mac20\Plugin.Connectivity.pdb" />
      <file src="src\Connectivity.Plugin.Abstractions\bin\Release\Plugin.Connectivity.Abstractions.dll" target="lib\Xamarin.Mac20\Plugin.Connectivity.Abstractions.dll" />
      <file src="src\Connectivity.Plugin.Abstractions\bin\Release\Plugin.Connectivity.Abstractions.xml" target="lib\Xamarin.Mac20\Plugin.Connectivity.Abstractions.xml" />
      <file src="src\Connectivity.Plugin.Abstractions\bin\Release\Plugin.Connectivity.Abstractions.pdb" target="lib\Xamarin.Mac20\Plugin.Connectivity.Abstractions.pdb" />
