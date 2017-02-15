@@ -50,6 +50,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime">
+      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\Xamarin.Mac\v2.0\Facades\System.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks">
+      <HintPath>..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\Xamarin.Mac\v2.0\Facades\System.Threading.Tasks.dll</HintPath>
+    </Reference>
     <Reference Include="Xamarin.Mac" />
   </ItemGroup>
   <ItemGroup>
