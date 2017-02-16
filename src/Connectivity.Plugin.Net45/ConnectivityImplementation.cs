@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 
 namespace Plugin.Connectivity
@@ -30,15 +31,7 @@ namespace Plugin.Connectivity
 
         void UpdateIsConnected()
         {
-            var isNetworkAvailable = NetworkInterface.GetIsNetworkAvailable();
-
-            if (!isNetworkAvailable)
-            {
-                isConnected = false;
-                return;
-            }
-
-            isConnected = IsReachableSynchronous("www.google.com");
+            isConnected = NetworkInterface.GetIsNetworkAvailable();
         }
 
         void NetworkChange_NetworkAvailabilityChanged(object sender, NetworkAvailabilityEventArgs e)
@@ -175,36 +168,35 @@ namespace Plugin.Connectivity
             return false;
         }
 
-        private bool IsReachableSynchronous(string host, int msTimeout = 5000)
-        {
-            var p = new Ping();
-
-            try
-            {
-                var r = p.Send(host, msTimeout);
-
-                if (r!= null && r.Status == IPStatus.Success)
-                {
-                    return true;
-                }
-            }
-            catch
-            {
-                // Suppressing catch here, if any exception is returned by Ping, consider it as Not reachable.
-            }
-
-            return false;
-        }
-
-
-    /// <summary>
+        /// <summary>
         /// IsReachable
         /// </summary>
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <param name="msTimeout"></param>
         /// <returns></returns>
-        public override Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000) => Task.FromResult(isConnected);
+        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
+        {
+            var trimmedHost = host.Replace("http://www.", string.Empty).
+              Replace("http://", string.Empty).
+              Replace("https://www.", string.Empty).
+              Replace("https://", string.Empty).
+              TrimEnd('/');
+            try
+            {
+                using (var client = new TcpClient())
+                {
+                    client.ReceiveTimeout = msTimeout;
+                    await client.ConnectAsync(trimmedHost, port);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public override void Dispose(bool disposing)
         {
