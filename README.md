@@ -21,6 +21,7 @@ Build Status:
 |Windows Store RT|Yes|8.1+|
 |Windows 10 UWP|Yes|10+|
 |Xamarin.Mac|Yes|All|
+|.NET 4.5/WPF|Yes|All|
 
 
 ### API Usage
