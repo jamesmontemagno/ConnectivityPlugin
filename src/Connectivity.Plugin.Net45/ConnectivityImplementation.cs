@@ -64,8 +64,6 @@ namespace Plugin.Connectivity
                 bandwidths.Add((ulong) networkInterface.Speed);
             }
 
-            var isConnected = this.isConnected;
-
             UpdateIsConnected();
 
             OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs
@@ -73,11 +71,6 @@ namespace Plugin.Connectivity
                 ConnectionTypes = ConnectionTypes,
                 IsConnected = IsConnected
             });
-
-            if (isConnected != IsConnected)
-            {
-                OnConnectivityChanged(new ConnectivityChangedEventArgs() {IsConnected = isConnected});
-            }
         }
 
         ConnectionType ToConnectionTypes(NetworkInterface networkInterface)
