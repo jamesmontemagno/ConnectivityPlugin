@@ -102,12 +102,18 @@ namespace ConnectivitySample
 
 			CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
 			{
-				page.DisplayAlert("Connectivity Changed", "IsConnected: " + args.IsConnected.ToString(), "OK");
+
+				page.DisplayAlert("Connectivity Changed", "IsConnected: " + CrossConnectivity.Current.IsConnected + "  Args:" + args.IsConnected.ToString(), "OK");
 			};
 
+            CrossConnectivity.Current.ConnectivityTypeChanged += (sender, args) =>
+            {
+                page.DisplayAlert("Connectivity  Type Changed", "Types: " + args.ConnectionTypes.FirstOrDefault(), "OK");
+            };
 
-			// The root page of your application
-			MainPage = page = new ContentPage
+
+            // The root page of your application
+            MainPage = page = new ContentPage
 			{
 				Content = new StackLayout
 				{
