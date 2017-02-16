@@ -54,7 +54,7 @@ namespace ConnectivityTest
 			{
 				var stuff = string.Empty;
 				foreach (var i in e.ConnectionTypes)
-					stuff += "/n" + i.ToString();
+					stuff += "\n" + i.ToString();
 				
 				await DisplayAlert("Is Connected", (e.IsConnected ? "YES" : "NO") + stuff, "OK");
 
@@ -67,7 +67,7 @@ namespace ConnectivityTest
             {
                 var stuff = string.Empty;
                 foreach (var i in CrossConnectivity.Current.ConnectionTypes)
-                    stuff += "/n" + i.ToString();
+                    stuff += "\n" + i.ToString();
 
                 await DisplayAlert("Is Connected", (CrossConnectivity.Current.IsConnected ? "YES" : "NO") + stuff, "OK");
 
