@@ -242,7 +242,6 @@ namespace Plugin.Connectivity
 
         public static ConnectionType GetConnectionType(ConnectivityType connectivityType)
         {
-
             switch (connectivityType)
             {
                 case ConnectivityType.Ethernet:
@@ -253,8 +252,14 @@ namespace Plugin.Connectivity
                     return ConnectionType.WiFi;
                 case ConnectivityType.Bluetooth:
                     return ConnectionType.Bluetooth;
-                default:
+                case ConnectivityType.Mobile:
+                case ConnectivityType.MobileDun:
+                case ConnectivityType.MobileHipri:
                     return ConnectionType.Cellular;
+                case ConnectivityType.Dummy:
+                    return ConnectionType.Other;
+                default:
+                    return ConnectionType.Other;
             }
         }
 
