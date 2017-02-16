@@ -153,7 +153,12 @@ namespace Plugin.Connectivity
             var pingRequest = new Ping();
             try
             {
-                var pingReply = await pingRequest.SendPingAsync(host, msTimeout);
+                var trimmedHost = host.Replace("http://", string.Empty).
+                  Replace("https://", string.Empty).
+                  TrimEnd('/');
+
+
+                var pingReply = await pingRequest.SendPingAsync(trimmedHost, msTimeout);
 
                 if (pingReply != null && pingReply.Status == IPStatus.Success)
                 {
