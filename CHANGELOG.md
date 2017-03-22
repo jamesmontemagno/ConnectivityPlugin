@@ -1,6 +1,7 @@
 ### 2.4.0-Beta
 * WPF/.NET 4.5 Support
 * macOS Support
+* tvOS Support
 
 ### 2.3.0
 * Add bluetooth connection type
