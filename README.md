@@ -12,16 +12,17 @@ Build Status:
 
 **Platform Support**
 
-|Platform|Supported|Version|
-| ------------------- | :-----------: | :------------------: |
-|Xamarin.iOS|Yes|iOS 6+|
-|Xamarin.Android|Yes|API 10+|
-|Windows Phone Silverlight|Yes|8.0+|
-|Windows Phone RT|Yes|8.1+|
-|Windows Store RT|Yes|8.1+|
-|Windows 10 UWP|Yes|10+|
-|Xamarin.Mac|Yes|All|
-|.NET 4.5/WPF|Yes|All|
+|Platform|Version|
+| ------------------- | :------------------: |
+|Xamarin.iOS|iOS 6+|
+|tvOS - Apple TV|All|
+|Xamarin.Android|API 10+|
+|Windows Phone Silverlight|8.0+|
+|Windows Phone RT|8.1+|
+|Windows Store RT|8.1+|
+|Windows 10 UWP|10+|
+|Xamarin.Mac|All|
+|.NET 4.5/WPF|All|
 
 
 ### API Usage

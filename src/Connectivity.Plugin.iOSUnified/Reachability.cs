@@ -10,9 +10,9 @@
 
 using System;
 using System.Net;
-using SystemConfiguration;
 using CoreFoundation;
 using System.Diagnostics;
+using SystemConfiguration;
 
 namespace Plugin.Connectivity
 {
