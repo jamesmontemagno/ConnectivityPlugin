@@ -116,7 +116,9 @@
       <Link>CrossConnectivity.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Content Include="Properties\Plugin.Connectivity.rd.xml" />
+    <EmbeddedResource Include="Properties\Plugin.Connectivity.rd.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
