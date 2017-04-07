@@ -41,14 +41,18 @@ namespace Plugin.Connectivity
 		private NetworkStatus previousInternetStatus = NetworkStatus.NotReachable;
 		private void UpdateConnected(bool triggerChange = true)
 		{
-			var remoteHostStatus = Reachability.RemoteHostStatus();
-			var internetStatus = Reachability.InternetConnectionStatus();
+            var remoteHostStatus = Reachability.RemoteHostStatus();
+            var internetStatus = Reachability.InternetConnectionStatus();
+            var localWifiStatus = Reachability.LocalWifiConnectionStatus();
 
-			var previouslyConnected = isConnected;
-			isConnected = (internetStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
-							internetStatus == NetworkStatus.ReachableViaWiFiNetwork) ||
-						  (remoteHostStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
-							remoteHostStatus == NetworkStatus.ReachableViaWiFiNetwork);
+            var previouslyConnected = isConnected;
+            isConnected = (internetStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
+                            internetStatus == NetworkStatus.ReachableViaWiFiNetwork) ||
+                          (localWifiStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
+                            localWifiStatus == NetworkStatus.ReachableViaWiFiNetwork) ||
+                          (remoteHostStatus == NetworkStatus.ReachableViaCarrierDataNetwork ||
+                            remoteHostStatus == NetworkStatus.ReachableViaWiFiNetwork);
+
 
 			if (triggerChange)
 			{

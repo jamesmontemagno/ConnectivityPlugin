@@ -154,13 +154,13 @@ namespace Plugin.Connectivity
         // out parameter
 		//
         //
-        //static NetworkReachability adHocWiFiNetworkReachability;
+        static NetworkReachability adHocWiFiNetworkReachability;
         /// <summary>
         /// Checks ad hoc wifi is available
         /// </summary>
         /// <param name="flags"></param>
         /// <returns></returns>
-        /*public static bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
+        public static bool IsAdHocWiFiNetworkAvailable(out NetworkReachabilityFlags flags)
         {
             if (adHocWiFiNetworkReachability == null)
             {
@@ -176,7 +176,7 @@ namespace Plugin.Connectivity
                 return false;
 
             return IsReachableWithoutRequiringConnection(flags);
-        }*/
+        }
 
        
 
@@ -269,6 +269,17 @@ namespace Plugin.Connectivity
             return status;
         }
 
+        public static NetworkStatus LocalWifiConnectionStatus()
+        {
+        	NetworkReachabilityFlags flags;
+        	if (IsAdHocWiFiNetworkAvailable(out flags))
+        	{
+        		if ((flags & NetworkReachabilityFlags.IsDirect) != 0)
+        			return NetworkStatus.ReachableViaWiFiNetwork;
+        	}
+        	return NetworkStatus.NotReachable;
+        }
+
         /// <summary>
         /// Dispose
         /// </summary>
@@ -284,6 +295,12 @@ namespace Plugin.Connectivity
             {
                 defaultRouteReachability.Dispose();
                 defaultRouteReachability = null;
+            }
+
+            if (adHocWiFiNetworkReachability != null)
+            {
+                adHocWiFiNetworkReachability.Dispose();
+                adHocWiFiNetworkReachability = null;
             }
         }
 
