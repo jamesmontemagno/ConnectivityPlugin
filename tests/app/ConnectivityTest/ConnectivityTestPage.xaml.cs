@@ -23,13 +23,13 @@ namespace ConnectivityTest
 
 		void HandleStart_Clicked(object sender, System.EventArgs e)
 		{
-			//CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;
+			CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;
 			CrossConnectivity.Current.ConnectivityTypeChanged += Current_ConnectivityTypeChanged;
 		}
 
 		void HandleStop_Clicked(object sender, System.EventArgs e)
 		{
-			//CrossConnectivity.Current.ConnectivityChanged -= Current_ConnectivityChanged;
+			CrossConnectivity.Current.ConnectivityChanged -= Current_ConnectivityChanged;
 			CrossConnectivity.Current.ConnectivityTypeChanged -= Current_ConnectivityTypeChanged;
 
 		}
