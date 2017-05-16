@@ -69,8 +69,11 @@ namespace Plugin.Connectivity
 		{
 			get 
 			{
-				if (initialTask?.IsCompleted ?? true)
-					return isConnected;
+                if (initialTask?.IsCompleted ?? true)
+                {
+                    UpdateConnected(false);
+                    return isConnected;
+                }
 
 				//await for the initial run to complete
 				initialTask.Wait();
@@ -160,19 +163,22 @@ namespace Plugin.Connectivity
 		{
 			get
 			{
-				var status = Reachability.InternetConnectionStatus();
-				switch (status)
-				{
-					case NetworkStatus.ReachableViaCarrierDataNetwork:
-						yield return ConnectionType.Cellular;
-						break;
-					case NetworkStatus.ReachableViaWiFiNetwork:
-						yield return ConnectionType.WiFi;
-						break;
-					default:
-						yield return ConnectionType.Other;
-						break;
-				}
+				var statuses = Reachability.InternetConnectionStatuses();
+                foreach (var status in statuses)
+                {
+                    switch (status)
+                    {
+                        case NetworkStatus.ReachableViaCarrierDataNetwork:
+                            yield return ConnectionType.Cellular;
+                            break;
+                        case NetworkStatus.ReachableViaWiFiNetwork:
+                            yield return ConnectionType.WiFi;
+                            break;
+                        default:
+                            yield return ConnectionType.Other;
+                            break;
+                    }
+                }
 			}
 		}
 		/// <summary>

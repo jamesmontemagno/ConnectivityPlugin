@@ -13,6 +13,8 @@ using System.Net;
 using CoreFoundation;
 using System.Diagnostics;
 using SystemConfiguration;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Plugin.Connectivity
 {
@@ -130,11 +132,11 @@ namespace Plugin.Connectivity
         /// </summary>
         public static event EventHandler ReachabilityChanged;
 
-        static void OnChange(NetworkReachabilityFlags flags)
+        static async void OnChange(NetworkReachabilityFlags flags)
         {
-            var h = ReachabilityChanged;
-            if (h != null)
-                h(null, EventArgs.Empty);
+            await Task.Delay(100);
+            ReachabilityChanged?.Invoke(null, EventArgs.Empty);
+
         }
 
 
@@ -234,6 +236,42 @@ namespace Plugin.Connectivity
             return NetworkStatus.ReachableViaWiFiNetwork;
         }
 
+		/// <summary>
+		/// Checks internet connection status
+		/// </summary>
+		/// <returns></returns>
+		public static IEnumerable<NetworkStatus> InternetConnectionStatuses()
+		{
+            var status = new List<NetworkStatus>();
+
+			NetworkReachabilityFlags flags;
+			bool defaultNetworkAvailable = IsNetworkAvailable(out flags);
+
+#if __IOS__
+			// If it's a WWAN connection..
+			if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
+                status.Add(NetworkStatus.ReachableViaCarrierDataNetwork);
+#endif
+
+			// If the connection is reachable and no connection is required, then assume it's WiFi
+			if (defaultNetworkAvailable)
+			{
+                status.Add(NetworkStatus.ReachableViaWiFiNetwork);
+			}
+            else if (((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0
+				|| (flags & NetworkReachabilityFlags.ConnectionOnTraffic) != 0)
+				&& (flags & NetworkReachabilityFlags.InterventionRequired) == 0)
+			{
+				// If the connection is on-demand or on-traffic and no user intervention
+				// is required, then assume WiFi.
+                status.Add(NetworkStatus.ReachableViaWiFiNetwork);
+			}
+
+
+
+			return status;
+		}
+
         /// <summary>
         /// Checks internet connection status
         /// </summary>
@@ -245,8 +283,14 @@ namespace Plugin.Connectivity
             NetworkReachabilityFlags flags;
             bool defaultNetworkAvailable = IsNetworkAvailable(out flags);
 
-            // If the connection is reachable and no connection is required, then assume it's WiFi
-            if (defaultNetworkAvailable)
+#if __IOS__
+			// If it's a WWAN connection..
+			if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
+				status = NetworkStatus.ReachableViaCarrierDataNetwork;
+#endif
+
+			// If the connection is reachable and no connection is required, then assume it's WiFi
+			if (defaultNetworkAvailable)
             {
                 status = NetworkStatus.ReachableViaWiFiNetwork;
             }
@@ -260,11 +304,6 @@ namespace Plugin.Connectivity
                 status = NetworkStatus.ReachableViaWiFiNetwork;
             }
 
-#if __IOS__
-            // If it's a WWAN connection..
-            if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
-                status = NetworkStatus.ReachableViaCarrierDataNetwork;
-#endif
 
             return status;
         }
