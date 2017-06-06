@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Net;
@@ -56,10 +57,13 @@ namespace Plugin.Connectivity
         /// </summary>
         /// <param name="context"></param>
         /// <param name="intent"></param>
-        public override void OnReceive(Context context, Intent intent)
+        public override async void OnReceive(Context context, Intent intent)
         {
             if (intent.Action != ConnectivityManager.ConnectivityAction)
                 return;
+
+            //await 500ms to ensure that the the connection manager updates
+            await Task.Delay(500);
 
             var connectionChangedAction = ConnectionChanged;
             var newConnection = IsConnected;
