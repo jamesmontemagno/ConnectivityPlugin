@@ -24,13 +24,13 @@ namespace ConnectivityTest
 		void HandleStart_Clicked(object sender, System.EventArgs e)
 		{
 			CrossConnectivity.Current.ConnectivityChanged += Current_ConnectivityChanged;
-			CrossConnectivity.Current.ConnectivityTypeChanged += Current_ConnectivityTypeChanged;
+			//CrossConnectivity.Current.ConnectivityTypeChanged += Current_ConnectivityTypeChanged;
 		}
 
 		void HandleStop_Clicked(object sender, System.EventArgs e)
 		{
 			CrossConnectivity.Current.ConnectivityChanged -= Current_ConnectivityChanged;
-			CrossConnectivity.Current.ConnectivityTypeChanged -= Current_ConnectivityTypeChanged;
+			//CrossConnectivity.Current.ConnectivityTypeChanged -= Current_ConnectivityTypeChanged;
 
 		}
 
@@ -41,6 +41,7 @@ namespace ConnectivityTest
 
 		void Current_ConnectivityChanged(object sender, Plugin.Connectivity.Abstractions.ConnectivityChangedEventArgs e)
 		{
+            var connected = CrossConnectivity.Current.IsConnected;
 			Device.BeginInvokeOnMainThread(async () =>
 			{
 				await DisplayAlert("Is Connected", e.IsConnected ? "YES" : "NO", "OK");
