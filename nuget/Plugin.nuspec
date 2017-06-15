@@ -52,7 +52,7 @@
      <file src="nuget\readme.txt" target="readme.txt" />
      
       <!--Core-->
-     <file src="src\Connectivity.Plugin\bin\Release\Plugin.Connectivity.*" target="lib\portable-net45+wp80+win8+wpa81" />
+     <file src="src\Connectivity.Plugin\bin\Release\Plugin.Connectivity.*" target="lib\netstandard1.0" />
   
      <!--Win Phone Silverlight-->
      <file src="src\Connectivity.Plugin.WindowsPhone8\bin\Release\Plugin.Connectivity.*" target="lib\wp80" />
