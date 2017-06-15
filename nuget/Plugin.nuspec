@@ -19,6 +19,33 @@
        <summary>Get network connectivity information such as network type, speeds, and if connection is available.</summary>
        <tags>xamarin, pcl, xam.pcl, connectivity, plugin for xamarin, plugins, xamarin.mac, xamarin.android, xamarin.ios, wifi, windows phone, winphone, wp8, winrt, android, xamarin.forms, ios</tags>
        <dependencies>
+       <group targetFramework="net">
+      </group>
+      <group targetFramework="win">
+      </group>
+      <group targetFramework="wp">
+      </group>
+      <group targetFramework="wpa">
+      </group>
+      <group targetFramework="netstandard1.0">
+        <dependency id="NETStandard.Library" version="1.6.1" />
+      </group>
+      <group targetFramework="MonoAndroid10">
+      </group>
+      <group targetFramework="Xamarin.iOS10">
+      </group>
+      <group targetFramework="Xamarin.Mac20">
+      </group>
+      <group targetFramework="portable-net45+win+wpa81+wp80">
+      </group>
+      <group targetFramework="uap">
+      </group>
+      <group targetFramework="dotnet">
+      </group>
+      <group targetFramework="xamarintvos">
+      </group>
+      <group targetFramework="xamarinwatchos">
+      </group>
        </dependencies>
    </metadata>
    <files> 
