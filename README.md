@@ -81,7 +81,7 @@ Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000);
 ```
 
 #### Changes in Connectivity
-When any network connectiivty is gained, changed, or loss you can register for an event to fire:
+When any network connectivity is gained, changed, or loss you can register for an event to fire:
 ```csharp
 /// <summary>
 /// Event handler when connection changes
