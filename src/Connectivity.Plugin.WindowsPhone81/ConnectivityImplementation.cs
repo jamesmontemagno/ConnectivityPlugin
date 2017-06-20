@@ -64,7 +64,7 @@ namespace Plugin.Connectivity
                     isConnected = false;
                 else
                 {
-                    NetworkConnectivityLevel level = profile.GetNetworkConnectivityLevel();
+                    var level = profile.GetNetworkConnectivityLevel();
                     isConnected = level != NetworkConnectivityLevel.None && level != NetworkConnectivityLevel.LocalAccess;
                 }
 
