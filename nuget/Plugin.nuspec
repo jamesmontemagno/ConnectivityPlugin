@@ -60,7 +60,7 @@
      
  
      <!--Xamarin.iOS Unified-->
-     <file src="src\Connectivity.Plugin.iOSUnified\bin\iPhone\Release\Plugin.Connectivity.*" target="lib\Xamarin.iOS10" />
+     <file src="src\Connectivity.Plugin.iOS\bin\iPhone\Release\Plugin.Connectivity.*" target="lib\Xamarin.iOS10" />
 
      <!--Xamarin.Mac-->
      <file src="src\Connectivity.Plugin.Mac\bin\Release\Plugin.Connectivity.*" target="lib\Xamarin.Mac20" />
