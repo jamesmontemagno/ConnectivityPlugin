@@ -124,19 +124,20 @@
     <Compile Include="AppDelegate.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
+      <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
+      <Name>Connectivity.Plugin.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConnectivityTest\ConnectivityTest.csproj">
       <Project>{94C0596E-0531-428E-8850-B955879086CC}</Project>
       <Name>ConnectivityTest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6EDB0588-FFC5-4EF5-8A99-9E241D0F878D}</Project>
-      <Name>Connectivity.Plugin.Abstractions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.iOSUnified\Connectivity.Plugin.iOSUnified.csproj">
+    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.iOS\Connectivity.Plugin.iOS.csproj">
       <Project>{2882AEEB-D4CD-4EB9-8A6C-6653B33681F0}</Project>
       <Name>Connectivity.Plugin.iOSUnified</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\..\src\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Import Project="..\..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('..\..\packages\Xamarin.Forms.2.3.4.247\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
 </Project>

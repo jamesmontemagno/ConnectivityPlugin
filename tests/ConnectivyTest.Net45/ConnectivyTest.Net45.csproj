@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6edb0588-ffc5-4ef5-8a99-9e241d0f878d}</Project>
+      <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Connectivity.Plugin.Net45\Connectivity.Plugin.Net45.csproj">

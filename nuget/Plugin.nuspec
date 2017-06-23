@@ -19,53 +19,41 @@
        <summary>Get network connectivity information such as network type, speeds, and if connection is available.</summary>
        <tags>xamarin, pcl, xam.pcl, connectivity, plugin for xamarin, plugins, xamarin.mac, xamarin.android, xamarin.ios, wifi, windows phone, winphone, wp8, winrt, android, xamarin.forms, ios</tags>
        <dependencies>
-       <group targetFramework="net">
-      </group>
-      <group targetFramework="win">
-      </group>
-      <group targetFramework="wp">
-      </group>
-      <group targetFramework="wpa">
-      </group>
-      <group targetFramework="netstandard1.0">
-        <dependency id="NETStandard.Library" version="1.6.1" />
-      </group>
-      <group targetFramework="MonoAndroid10">
-      </group>
-      <group targetFramework="Xamarin.iOS10">
-      </group>
-      <group targetFramework="Xamarin.Mac20">
-      </group>
-      <group targetFramework="portable-net45+win+wpa81+wp80">
-      </group>
-      <group targetFramework="uap">
-      </group>
-      <group targetFramework="dotnet">
-      </group>
-      <group targetFramework="xamarintvos">
-      </group>
-      <group targetFramework="xamarinwatchos">
-      </group>
+         <group targetFramework="net">
+         </group>
+         <group targetFramework="win">
+         </group>
+         <group targetFramework="wp">
+         </group>
+         <group targetFramework="wpa">
+         </group>
+         <group targetFramework="netstandard1.0">
+           <dependency id="NETStandard.Library" version="1.6.1" />
+         </group>
+         <group targetFramework="MonoAndroid10">
+         </group>
+         <group targetFramework="Xamarin.iOS10">
+         </group>
+         <group targetFramework="Xamarin.Mac20">
+         </group>
+         <group targetFramework="portable-net45+win+wpa81+wp80">
+         </group>
+         <group targetFramework="uap">
+         </group>
+         <group targetFramework="dotnet">
+         </group>
+         <group targetFramework="xamarintvos">
+         </group>
+         <group targetFramework="xamarinwatchos">
+         </group>
        </dependencies>
    </metadata>
    <files> 
      <file src="nuget\readme.txt" target="readme.txt" />
      
       <!--Core-->
-     <file src="src\Connectivity.Plugin\bin\Release\Plugin.Connectivity.*" target="lib\netstandard1.0" />
+     <file src="src\Connectivity.Plugin\bin\Release\netstandard1.0\Plugin.Connectivity.*" target="lib\netstandard1.0" />
   
-     <!--Win Phone Silverlight-->
-     <file src="src\Connectivity.Plugin.WindowsPhone8\bin\Release\Plugin.Connectivity.*" target="lib\wp80" />
-    
-        <!--Win Phone Silverlight 81-->
-     <file src="src\Connectivity.Plugin.WindowsPhone81SL\bin\Release\Plugin.Connectivity.*" target="lib\wp81" />
-     <!--Win Phone 81 RT-->
-     <file src="src\Connectivity.Plugin.WindowsPhone81\bin\Release\Plugin.Connectivity.*" target="lib\wpa81" />
-     
-
-     <!--WinStore-->
-     <file src="src\Connectivity.Plugin.WindowsStore\bin\Release\Plugin.Connectivity.*" target="lib\win8" />
-    
 
      <!--Xamarin.Android-->
      <file src="src\Connectivity.Plugin.Android\bin\Release\Plugin.Connectivity.*" target="lib\MonoAndroid10" />
@@ -81,10 +69,9 @@
      <!--tvOS-->
      <file src="src\Connectivity.Plugin.tvOS\bin\Release\Plugin.Connectivity.*" target="lib\XamarinTVOS" />
 
-
-    
      <!--UWP-->
       <file src="src\Connectivity.Plugin.UWP\bin\Release\Plugin.Connectivity.*" target="lib\UAP10" />
+      <file src="src\Connectivity.Plugin.UWP\bin\Release\Properties\*.rd.xml" target="lib\UAP10\Plugin.Connectivity\Properties" />
       
        <!--Net 4.5-->
      <file src="src\Connectivity.Plugin.Net45\bin\Release\Plugin.Connectivity.*" target="lib\net45" />

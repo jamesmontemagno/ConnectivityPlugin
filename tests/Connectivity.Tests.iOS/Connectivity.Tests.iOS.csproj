@@ -23,7 +23,7 @@
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
-<CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>
@@ -112,15 +112,16 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6edb0588-ffc5-4ef5-8a99-9e241d0f878d}</Project>
+      <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Connectivity.Plugin.iOSUnified\Connectivity.Plugin.iOSUnified.csproj">
+    <ProjectReference Include="..\..\src\Connectivity.Plugin.iOS\Connectivity.Plugin.iOS.csproj">
       <Project>{2882aeeb-d4cd-4eb9-8a6c-6653b33681f0}</Project>
       <Name>Connectivity.Plugin.iOSUnified</Name>
       <IsAppExtension>false</IsAppExtension>
       <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\..\src\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

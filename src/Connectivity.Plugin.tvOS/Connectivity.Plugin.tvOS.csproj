@@ -6,9 +6,9 @@
     <ProjectTypeGuids>{06FA79CB-D6CD-4721-BB4B-1BD202089C55};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{44087DE8-D645-4F7B-A655-20EEA65EF209}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Connectivity.Plugin</RootNamespace>
+    <RootNamespace>Plugin.Connectivity</RootNamespace>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <AssemblyName>Connectivity.Plugin</AssemblyName>
+    <AssemblyName>Plugin.Connectivity</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,7 +27,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
-    <DocumentationFile>bin\Release\Connectivity.Plugin.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\Plugin.Connectivity.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -39,22 +39,17 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Connectivity.Plugin.iOSUnified\ConnectivityImplementation.cs">
-      <Link>ConnectivityImplementation.cs</Link>
-    </Compile>
-    <Compile Include="..\Connectivity.Plugin.iOSUnified\Reachability.cs">
-      <Link>Reachability.cs</Link>
-    </Compile>
     <Compile Include="..\Connectivity.Plugin\CrossConnectivity.cs">
       <Link>CrossConnectivity.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6EDB0588-FFC5-4EF5-8A99-9E241D0F878D}</Project>
+      <Project>{3b973815-8ceb-49b1-81ea-e1da53cd4197}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\TVOS\Xamarin.TVOS.CSharp.targets" />
 </Project>

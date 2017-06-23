@@ -104,13 +104,13 @@
     <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
+      <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
+      <Name>Connectivity.Plugin.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ConnectivityTest\ConnectivityTest.csproj">
       <Project>{94C0596E-0531-428E-8850-B955879086CC}</Project>
       <Name>ConnectivityTest</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6EDB0588-FFC5-4EF5-8A99-9E241D0F878D}</Project>
-      <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\Connectivity.Plugin.Android\Connectivity.Plugin.Android.csproj">
       <Project>{56A56F17-7DE1-4CA1-9617-BF32E971AC84}</Project>

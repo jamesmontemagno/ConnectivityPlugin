@@ -17,9 +17,6 @@ Build Status:
 |Xamarin.iOS|iOS 6+|
 |tvOS - Apple TV|All|
 |Xamarin.Android|API 10+|
-|Windows Phone Silverlight|8.0+|
-|Windows Phone RT|8.1+|
-|Windows Store RT|8.1+|
 |Windows 10 UWP|10+|
 |Xamarin.Mac|All|
 |.NET 4.5/WPF|All|
@@ -120,21 +117,3 @@ By adding these permissions [Google Play will automatically filter out devices](
 
 ### iOS:
 Bandwidths are not supported and will always return an empty list.
-
-#### Removal of reachabilityForLocalWiFi
-
-Older versions of this sample included the method reachabilityForLocalWiFi. As originally designed, this method allowed apps using Bonjour to check the status of "local only" Wi-Fi (Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse. 
- 
-However, the additional peer-to-peer APIs that have since been added to iOS and OS X have rendered it largely obsolete.  Because of the narrow use case for this API and the large potential for misuse, reachabilityForLocalWiFi has been removed from Reachability.
-
-Apps that have a specific requirement can use reachabilityWithAddress to monitor IN_LINKLOCALNETNUM (that is, 169.254.0.0).  
- 
-Note: ONLY apps that have a specific requirement should be monitoring IN_LINKLOCALNETNUM.  For the overwhelming majority of apps, monitoring this address is unnecessary and potentially harmful.
-
-### Windows 8.1 & Windows Phone 8.1 RT:
-RT apps can not perform loopback, so you can not use IsReachable to query the states of a local IP.
-
-####Permissions to think about:
-The Private Networks (Client & Server) capability is represented by the Capability name = "privateNetworkClientServer" tag in the app manifest. 
-The Internet (Client & Server) capability is represented by the Capability name = "internetClientServer" tag in the app manifest.
-
