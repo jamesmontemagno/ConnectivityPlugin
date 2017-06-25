@@ -11,7 +11,7 @@ See: https://github.com/jamesmontemagno/ConnectivityPlugin/blob/master/CHANGELOG
 
 **IMPORTANT**
 Android:
-The following persmissions are automatically added for you:
+The following permissions are automatically added for you:
 ACCESS_NETWORK_STATE & ACCESS_WIFI_STATE
 
 iOS:
