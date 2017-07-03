@@ -7,9 +7,6 @@ var libraries = new Dictionary<string, string> {
  	{ "./src/Connectivity.sln", "Any" },
 };
 
-var samples = new Dictionary<string, string> {
-	{ "./samples/ConnectivitySample.sln", "Win" },
-};
 
 var BuildAction = new Action<Dictionary<string, string>> (solutions =>
 {
@@ -58,6 +55,7 @@ Task("Libraries").Does(()=>
 {
     BuildAction(libraries);
 });
+
 
 Task ("NuGet")
 	.IsDependentOn ("Libraries")

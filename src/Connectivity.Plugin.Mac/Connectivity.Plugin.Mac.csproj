@@ -62,22 +62,17 @@
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Connectivity.Plugin.iOSUnified\ConnectivityImplementation.cs">
-      <Link>ConnectivityImplementation.cs</Link>
-    </Compile>
-    <Compile Include="..\Connectivity.Plugin.iOSUnified\Reachability.cs">
-      <Link>Reachability.cs</Link>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="..\Connectivity.Plugin\CrossConnectivity.cs">
       <Link>CrossConnectivity.cs</Link>
     </Compile>
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{6EDB0588-FFC5-4EF5-8A99-9E241D0F878D}</Project>
+      <Project>{3b973815-8ceb-49b1-81ea-e1da53cd4197}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="..\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
 </Project>

@@ -1,7 +1,9 @@
-### 2.4.0-Beta
+### 3.0.0-beta
 * WPF/.NET 4.5 Support
 * macOS Support
 * tvOS Support
+* Move to .NET STandard 
+* Removal of Windows Phone/Store 8/8.1
 
 ### 2.3.0
 * Add bluetooth connection type
