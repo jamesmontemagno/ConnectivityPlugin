@@ -45,3 +45,4 @@ On rarer occassions a local machine or local IP on the network may need to be pi
 Task<bool> IsReachable(string host, int msTimeout = 5000);
 ```
 
+<= Back to [Table of Contents](README.md)

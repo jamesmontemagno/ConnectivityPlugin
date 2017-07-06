@@ -58,3 +58,5 @@ CrossConnectivity.Current.ConnectivityTypeChanged += async (sender, args) =>
         Debug.WriteLine($"Connection Type {t}");
   };
 ```
+
+<= Back to [Table of Contents](README.md)

@@ -89,3 +89,5 @@ public async Task<string> MakeWebRequestOneMeg()
 * Android: In releases earlier than 3.0.2 this was returned as Mbps.
 * Android: Only returns bandwidth of WiFi connections. For all others you can check the 
 
+<= Back to [Table of Contents](README.md)
+
