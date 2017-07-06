@@ -1,8 +1,5 @@
 # Getting Started
 
-[![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)]
-(https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
-
 ## Setup
 * NuGet: [Xam.Plugin.Connectivity](http://www.nuget.org/packages/Xam.Plugin.Connectivity) [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
 * `PM> Install-Package Xam.Plugin.Connectivity`
