@@ -275,7 +275,7 @@ namespace Plugin.Connectivity
                 try
                 {
                     if (ConnectionTypes.Contains(ConnectionType.WiFi))
-                        return new[] { (UInt64)WifiManager.ConnectionInfo.LinkSpeed };
+                        return new[] { (UInt64)WifiManager.ConnectionInfo.LinkSpeed * 1000000 };
                 }
                 catch (Exception e)
                 {
