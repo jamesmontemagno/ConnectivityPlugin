@@ -60,7 +60,7 @@ By adding these permissions [Google Play will automatically filter out devices](
 ## Architecture
 
 ### What's with this .Current Global Variable? Why can't I use $FAVORITE_IOC_LIBARY
-You totally can! Every plugin I create is based on an interface. The static singleton just gives you a super simple way of gaining access to the platform implementation for quick throw-away proof of concept applications. When you are using dependency inversion (i.e the _D_ in [SOLID](https://en.wikipedia.org/wiki/SOLID_(object-oriented_design))) software architecture then your viwmodels, services and any code that needs access to the functionality provided by this plugin must be via the `IConnectivity` interface which is passed in as an argument in your constructor and assigned to a readonly private member to prevent accidential value reassignment.
+You totally can! Every plugin I create is based on an interface. The static singleton just gives you a super simple way of gaining access to the platform implementation for quick throw-away proof of concept applications. When you are using dependency inversion (i.e the _D_ in [SOLID](https://en.wikipedia.org/wiki/SOLID_(object-oriented_design))) software architecture then your viewmodels, services and any code that needs access to the functionality provided by this plugin must be via the `IConnectivity` interface which is passed in as an argument in your constructor and assigned to a readonly private member to prevent accidential value reassignment.
 
 
 ```csharp
