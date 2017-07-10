@@ -1,4 +1,8 @@
-### 3.0.0-beta
+### 3.0.2-beta
+* [Android] Bandwidth as bits per second instead of mbps
+* [Android] No longer show connection types that aren't available
+
+### 3.0.1
 * WPF/.NET 4.5 Support
 * macOS Support
 * tvOS Support
