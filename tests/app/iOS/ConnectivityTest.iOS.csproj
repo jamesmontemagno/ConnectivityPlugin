@@ -134,7 +134,7 @@
     </ProjectReference>
     <ProjectReference Include="..\..\..\src\Connectivity.Plugin.iOS\Connectivity.Plugin.iOS.csproj">
       <Project>{2882AEEB-D4CD-4EB9-8A6C-6653B33681F0}</Project>
-      <Name>Connectivity.Plugin.iOSUnified</Name>
+      <Name>Connectivity.Plugin.iOS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="..\..\..\src\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />

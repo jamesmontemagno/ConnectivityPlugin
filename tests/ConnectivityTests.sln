@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		..\nuget\Plugin.nuspec = ..\nuget\Plugin.nuspec
 		..\README.md = ..\README.md
 		..\nuget\readme.txt = ..\nuget\readme.txt
+		..\CHANGELOG.md = ..\CHANGELOG.md
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connectivity.Plugin.UWP", "..\src\Connectivity.Plugin.UWP\Connectivity.Plugin.UWP.csproj", "{25A7B55B-93ED-4631-8587-276054F4A321}"
@@ -38,9 +39,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectivyTest.Net45", "Con
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Connectivity.Plugin.Shared.Apple", "..\src\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.shproj", "{B302BD77-2E10-4889-876A-2589AA1BDB67}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connectivity.Plugin", "..\src\Connectivity.Plugin\Connectivity.Plugin.csproj", "{4C6B4247-169D-4144-AFC8-34B27C07450E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connectivity.Plugin", "..\src\Connectivity.Plugin\Connectivity.Plugin.csproj", "{4C6B4247-169D-4144-AFC8-34B27C07450E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Connectivity.Plugin.Abstractions", "..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj", "{503C3C83-390A-48EF-845C-DF4C928CB4A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Connectivity.Plugin.Abstractions", "..\src\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj", "{503C3C83-390A-48EF-845C-DF4C928CB4A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConnectivityTest.UWP", "ConnectivityTest.UWP\ConnectivityTest.UWP.csproj", "{0D8B14E6-6ABB-4831-A5F2-2FAE6011CFC0}"
 EndProject

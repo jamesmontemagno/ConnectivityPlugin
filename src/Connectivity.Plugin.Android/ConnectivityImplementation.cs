@@ -66,17 +66,30 @@ namespace Plugin.Connectivity
                 {
                     foreach (var network in manager.GetAllNetworks())
                     {
-                        var info = manager.GetNetworkInfo(network);
+                        try
+                        {
+                            var info = manager.GetNetworkInfo(network);
 
-                        if (info?.IsConnected ?? false)
-                            return true;
+                            if (info == null)
+                                continue;
+
+                            if (info.IsConnected)
+                                return true;
+                        }
+                        catch
+                        {
+                            //there is a possibility, but don't worry
+                        }
                     }
                 }
                 else
                 {
                     foreach (var info in manager.GetAllNetworkInfo())
                     {
-                        if (info?.IsConnected ?? false)
+                        if (info == null)
+                            continue;
+                        
+                        if (info.IsConnected)
                             return true;
                     }
                 }
@@ -218,11 +231,18 @@ namespace Plugin.Connectivity
             {
                 foreach (var network in manager.GetAllNetworks())
                 {
-                    var info = manager.GetNetworkInfo(network);
+                    NetworkInfo info = null;
+                    try
+                    {
+                        info = manager.GetNetworkInfo(network);
+                    }
+                    catch
+                    {
+                        //there is a possibility, but don't worry about it
+                    }
 
-                    if (info?.Type == null)
-                        yield return ConnectionType.Other;
-                    
+                    if (info == null || !info.IsAvailable)
+                        continue;
 
                     yield return GetConnectionType(info.Type);
                 }
@@ -231,8 +251,8 @@ namespace Plugin.Connectivity
             {
                 foreach (var info in manager.GetAllNetworkInfo())
                 {
-                    if (info?.Type == null)
-                        yield return ConnectionType.Other;
+                    if (info == null || !info.IsAvailable)
+                        continue;
 
                     yield return GetConnectionType(info.Type);
                 }
@@ -255,6 +275,7 @@ namespace Plugin.Connectivity
                 case ConnectivityType.Mobile:
                 case ConnectivityType.MobileDun:
                 case ConnectivityType.MobileHipri:
+                case ConnectivityType.MobileMms:
                     return ConnectionType.Cellular;
                 case ConnectivityType.Dummy:
                     return ConnectionType.Other;
