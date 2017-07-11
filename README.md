@@ -3,7 +3,7 @@
 Simple cross platform plugin to check connection status of mobile device, gather connection type, bandwidths, and more.
 
 ## Documentation
-Get started by reading through the [Connectivity Plugin documentation](docs).
+Get started by reading through the [Connectivity Plugin documentation](https://jamesmontemagno.github.io/ConnectivityPlugin/).
 
 ## NuGet
 * Available on NuGet: [Xam.Plugin.Connectivity](http://www.nuget.org/packages/Xam.Plugin.Connectivity) [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
