@@ -4,6 +4,7 @@
 * NuGet: [Xam.Plugin.Connectivity](http://www.nuget.org/packages/Xam.Plugin.Connectivity) [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
 * `PM> Install-Package Xam.Plugin.Connectivity`
 * Install into ALL of your projects, include client projects.
+* namespace: `using Plugin.Connectivity;`
 
 
 ## Using Connectivity APIs
@@ -56,31 +57,6 @@ By adding these permissions [Google Play will automatically filter out devices](
 ```csharp
 [assembly: UsesFeature("android.hardware.wifi", Required = false)]
 ```
-
-## Architecture
-
-### What's with this .Current Global Variable? Why can't I use $FAVORITE_IOC_LIBARY
-You totally can! Every plugin I create is based on an interface. The static singleton just gives you a super simple way of gaining access to the platform implementation. If you are looking to use Depenency Injector or Inversion of Control (IoC) you will need to gain access to a reference of `IConnectivity`. 
-
-This is what your code may look like when using this approach:
-
-```csharp
-public MyViewModel()
-{
-    readonly IConnectivity connectivity;
-    public MyViewModel(IConnectivity connectivity)
-    {
-        this.connectivity = connectivity;
-    }
-
-    public bool IsConnected => connectivity.IsConnected;
-}
-```
-
-Remember that the implementation of the plugin lives in the platform specific applications, which means you will need to register .Current (or instantiate your own CrossConnectivityImplementation) in your IoC container as the implementation of IConnectivity on each platform. This registration must happen from your application binary, not from your portable/netstandard class library.
-
-### What About Unit Testing?
-To learn about unit testing strategies be sure to read my blog: [Unit Testing Plugins for Xamarin](http://motzcod.es/post/159267241302/unit-testing-plugins-for-xamarin)
 
 
 <= Back to [Table of Contents](README.md)

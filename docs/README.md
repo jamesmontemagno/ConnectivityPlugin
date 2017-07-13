@@ -3,7 +3,8 @@
 Here you will find detailed documentation on setting up and using the Connectivity Plugin for Xamarin and Windows
 
 ### Table of Contents
-* [Getting Started](1-GettingStarted.md)
-* [Checking Connectivity](2-CheckingConnectivity.md)
-* [Connectivity Changes](3-ConnectivityChanges.md)
-* [Ping a Host](4-PingaHost.md)
+* [Getting Started](GettingStarted.md)
+* [Checking Connectivity](CheckingConnectivity.md)
+* [Connectivity Changes](ConnectivityChanges.md)
+* [Ping a Host](PingaHost.md)
+* [Architecture](Architecture.md)
