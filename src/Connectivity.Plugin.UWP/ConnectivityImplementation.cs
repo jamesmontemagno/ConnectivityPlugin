@@ -8,6 +8,7 @@ using Windows.Networking.Sockets;
 using Windows.Networking;
 using System.Diagnostics;
 using Windows.ApplicationModel.Core;
+using System.Threading;
 
 namespace Plugin.Connectivity
 {
@@ -93,7 +94,10 @@ namespace Plugin.Connectivity
                 var serverHost = new HostName(host);
                 using (var client = new StreamSocket())
                 {
-                    await client.ConnectAsync(serverHost, "http");
+                    var cancellationTokenSource = new CancellationTokenSource();
+                    cancellationTokenSource.CancelAfter(msTimeout);
+
+                    await client.ConnectAsync(serverHost, "http").AsTask(cancellationTokenSource.Token);
                     return true;
                 }
 
@@ -131,10 +135,13 @@ namespace Plugin.Connectivity
             {
                 using (var tcpClient = new StreamSocket())
                 {
+                    var cancellationTokenSource = new CancellationTokenSource();
+                    cancellationTokenSource.CancelAfter(msTimeout);
+
                     await tcpClient.ConnectAsync(
                         new Windows.Networking.HostName(host),
                         port.ToString(),
-                        SocketProtectionLevel.PlainSocket);
+                        SocketProtectionLevel.PlainSocket).AsTask(cancellationTokenSource.Token);
 
                     var localIp = tcpClient.Information.LocalAddress.DisplayName;
                     var remoteIp = tcpClient.Information.RemoteAddress.DisplayName;
