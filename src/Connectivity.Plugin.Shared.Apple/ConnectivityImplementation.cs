@@ -163,7 +163,7 @@ namespace Plugin.Connectivity
 		{
 			get
 			{
-				var statuses = Reachability.InternetConnectionStatuses();
+				var statuses = Reachability.GetActiveConnectionType();
                 foreach (var status in statuses)
                 {
                     switch (status)

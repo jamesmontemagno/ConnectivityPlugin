@@ -140,7 +140,7 @@ namespace Plugin.Connectivity
         }
 
 
-		/*Removal of reachabilityForLocalWiFi
+        /*Removal of reachabilityForLocalWiFi
 		============
 		Older versions of this sample included the method reachabilityForLocalWiFi.As originally designed, this method allowed apps using Bonjour to check the status of "local only" Wi-Fi(Wi-Fi without a connection to the larger internet) to determine whether or not they should advertise or browse.
 
@@ -154,7 +154,7 @@ namespace Plugin.Connectivity
         // Returns true if it is possible to reach the AdHoc WiFi network
         // and optionally provides extra network reachability flags as the
         // out parameter
-		//
+        //
         //
         //static NetworkReachability adHocWiFiNetworkReachability;
         /// <summary>
@@ -180,7 +180,7 @@ namespace Plugin.Connectivity
             return IsReachableWithoutRequiringConnection(flags);
         }*/
 
-       
+
 
         static NetworkReachability defaultRouteReachability;
         static bool IsNetworkAvailable(out NetworkReachabilityFlags flags)
@@ -236,26 +236,28 @@ namespace Plugin.Connectivity
             return NetworkStatus.ReachableViaWiFiNetwork;
         }
 
-		/// <summary>
-		/// Checks internet connection status
-		/// </summary>
-		/// <returns></returns>
-		public static IEnumerable<NetworkStatus> InternetConnectionStatuses()
-		{
+        /// <summary>
+        /// Checks internet connection status
+        /// </summary>
+        /// <returns></returns>
+        public static IEnumerable<NetworkStatus> GetActiveConnectionType()
+        {
             var status = new List<NetworkStatus>();
 
-			NetworkReachabilityFlags flags;
-			bool defaultNetworkAvailable = IsNetworkAvailable(out flags);
+            NetworkReachabilityFlags flags;
+            bool defaultNetworkAvailable = IsNetworkAvailable(out flags);
 
 #if __IOS__
-			// If it's a WWAN connection..
-			if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
+            // If it's a WWAN connection..
+            if ((flags & NetworkReachabilityFlags.IsWWAN) != 0)
                 status.Add(NetworkStatus.ReachableViaCarrierDataNetwork);
+            else if (defaultNetworkAvailable)
+#else
+            // If the connection is reachable and no connection is required, then assume it's WiFi
+            if (defaultNetworkAvailable)
 #endif
 
-			// If the connection is reachable and no connection is required, then assume it's WiFi
-			if (defaultNetworkAvailable)
-			{
+            {
                 status.Add(NetworkStatus.ReachableViaWiFiNetwork);
 			}
             else if (((flags & NetworkReachabilityFlags.ConnectionOnDemand) != 0
