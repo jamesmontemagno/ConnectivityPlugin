@@ -1,8 +1,9 @@
-### 3.0.2-beta
+### 3.0.2
 * [Android] Bandwidth as bits per second instead of mbps
 * [Android] No longer show connection types that aren't available
 * [Android] Only return active connection types
 * [iOS] Fix for connection type always returning WiFi even when on cellular
+* [Windows] Improve timeout when checking connections
 
 ### 3.0.1
 * WPF/.NET 4.5 Support
