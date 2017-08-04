@@ -70,7 +70,7 @@ namespace Plugin.Connectivity
                         {
                             var info = manager.GetNetworkInfo(network);
 
-                            if (info == null || !info.IsAvailable)
+                            if (info == null || !info.IsAvailable || info.Subtype.HasFlag(ConnectivityType.Dummy))
                                 continue;
 
                             if (info.IsConnected)
@@ -86,7 +86,7 @@ namespace Plugin.Connectivity
                 {
                     foreach (var info in manager.GetAllNetworkInfo())
                     {
-                        if (info == null || !info.IsAvailable)
+                        if (info == null || !info.IsAvailable || info.Subtype.HasFlag(ConnectivityType.Dummy))
                             continue;
                         
                         if (info.IsConnected)
