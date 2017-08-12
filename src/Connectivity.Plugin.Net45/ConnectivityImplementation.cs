@@ -1,9 +1,12 @@
 ﻿using Plugin.Connectivity.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Plugin.Connectivity
@@ -17,6 +20,9 @@ namespace Plugin.Connectivity
         private readonly IList<ulong> bandwidths = new List<ulong>();
         private bool isConnected;
 
+		/// <summary>
+		/// Default constructor
+		/// </summary>
         public ConnectivityImplementation()
         {
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
@@ -135,23 +141,21 @@ namespace Plugin.Connectivity
         /// </summary>
         public override bool IsConnected => isConnected;
 
-        /// <summary>
-        /// Is Reachable
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="msTimeout"></param>
-        /// <returns></returns>
-        public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
-        {
-            var pingRequest = new Ping();
+		/// <summary>
+		/// Tests if a host name is pingable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="timeout">Timeout</param>
+		/// <returns></returns>
+		public override async Task<bool> IsReachable(string host, TimeSpan timeout)
+		{
+			if (string.IsNullOrWhiteSpace(host))
+				throw new ArgumentNullException(nameof(host));
+
+			var pingRequest = new Ping();
             try
-            {
-                var trimmedHost = host.Replace("http://", string.Empty).
-                  Replace("https://", string.Empty).
-                  TrimEnd('/');
-
-
-                var pingReply = await pingRequest.SendPingAsync(trimmedHost, msTimeout);
+            {              
+                var pingReply = await pingRequest.SendPingAsync(host, (int)timeout.TotalMilliseconds);
 
                 if (pingReply != null && pingReply.Status == IPStatus.Success)
                 {
@@ -166,37 +170,58 @@ namespace Plugin.Connectivity
             return false;
         }
 
-        /// <summary>
-        /// IsReachable
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        /// <param name="msTimeout"></param>
-        /// <returns></returns>
-        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
-        {
-            var trimmedHost = host.Replace("http://www.", string.Empty).
-              Replace("http://", string.Empty).
-              Replace("https://www.", string.Empty).
-              Replace("https://", string.Empty).
-              TrimEnd('/');
-            try
-            {
-                using (var client = new TcpClient())
-                {
-                    client.ReceiveTimeout = msTimeout;
-                    await client.ConnectAsync(trimmedHost, port);
-                }
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout</param>
+		public override Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout)
+		{
+			if (uri == null)
+				throw new ArgumentNullException(nameof(uri));
 
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
+			return Task.Run(() =>
+			{
+				try
+				{
+					using (var clientDone = new ManualResetEvent(false))
+					{
+						var reachable = false;
 
-        public override void Dispose(bool disposing)
+						var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
+
+						using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
+						{
+							var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
+
+							void handler(object sender, SocketAsyncEventArgs e)
+							{
+								reachable = e.SocketError == SocketError.Success;
+								socketEventArg.Completed -= handler;
+								clientDone.Set();
+							};
+
+							socketEventArg.Completed += handler;
+
+							clientDone.Reset();
+
+							socket.ConnectAsync(socketEventArg);
+
+							clientDone.WaitOne(timeout);
+
+							return reachable;
+						}
+					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
+					return false;
+				}
+			});
+		}
+
+		public override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
 

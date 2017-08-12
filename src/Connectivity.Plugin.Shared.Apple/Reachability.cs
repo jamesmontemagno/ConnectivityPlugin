@@ -57,10 +57,10 @@ namespace Plugin.Connectivity
         public static bool IsReachableWithoutRequiringConnection(NetworkReachabilityFlags flags)
         {
             // Is it reachable with the current network configuration?
-            bool isReachable = (flags & NetworkReachabilityFlags.Reachable) != 0;
+            var isReachable = (flags & NetworkReachabilityFlags.Reachable) != 0;
 
             // Do we need a connection to reach it?
-            bool noConnectionRequired = (flags & NetworkReachabilityFlags.ConnectionRequired) == 0;
+            var noConnectionRequired = (flags & NetworkReachabilityFlags.ConnectionRequired) == 0;
 
 #if __IOS__
             // Since the network stack will automatically try to get the WAN up,
@@ -71,33 +71,48 @@ namespace Plugin.Connectivity
             return isReachable && noConnectionRequired;
         }
 
-        /// <summary>
-        /// Checks if host is reachable
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        /// <returns></returns>
-        public static bool IsHostReachable(string host, int port)
+		/// <summary>
+		/// Checks if host is reachable
+		/// </summary>
+		/// <param name="uri"></param>
+		/// <returns></returns>
+		public static bool IsHostReachable(Uri uri)
+		{
+			using (var r = new NetworkReachability(uri.Host))
+			{
+				if (r.TryGetFlags(out NetworkReachabilityFlags flags))
+				{
+					return IsReachableWithoutRequiringConnection(flags);
+				}
+			}
+			
+			return false;
+		}
+
+		/// <summary>
+		/// Checks if host is reachable
+		/// </summary>
+		/// <param name="host"></param>
+		/// <param name="port"></param>
+		/// <returns></returns>
+		public static bool IsHostReachable(string host, int port)
         {
             if (string.IsNullOrWhiteSpace(host))
                 return false;
-
-            IPAddress address;
-            if (!IPAddress.TryParse(host + ":" + port, out address))
+			
+            if (!IPAddress.TryParse(host + ":" + port, out IPAddress address))
             {
                 Debug.WriteLine(host + ":" + port + " is not valid");
                 return false;
             }
-            using (var r = new NetworkReachability(host))
+            using (var r = new NetworkReachability(address))
             {
-
-                NetworkReachabilityFlags flags;
-
-                if (r.TryGetFlags(out flags))
-                {
-                    return IsReachableWithoutRequiringConnection(flags);
-                }
-            }
+				
+				if (r.TryGetFlags(out NetworkReachabilityFlags flags))
+				{
+					return IsReachableWithoutRequiringConnection(flags);
+				}
+			}
             return false;
         }
 
@@ -114,13 +129,12 @@ namespace Plugin.Connectivity
             using (var r = new NetworkReachability(host))
             {
 
-                NetworkReachabilityFlags flags;
 
-                if (r.TryGetFlags(out flags))
-                {
-                    return IsReachableWithoutRequiringConnection(flags);
-                }
-            }
+				if (r.TryGetFlags(out NetworkReachabilityFlags flags))
+				{
+					return IsReachableWithoutRequiringConnection(flags);
+				}
+			}
             return false;
         }
 

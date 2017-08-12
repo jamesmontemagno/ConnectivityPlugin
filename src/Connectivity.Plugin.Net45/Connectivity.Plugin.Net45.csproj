@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
-      <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
+      <Project>{3b973815-8ceb-49b1-81ea-e1da53cd4197}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
   </ItemGroup>

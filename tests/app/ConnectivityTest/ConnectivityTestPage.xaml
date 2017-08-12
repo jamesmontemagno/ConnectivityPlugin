@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:ConnectivityTest" x:Class="ConnectivityTest.ConnectivityTestPage">
-	<StackLayout>
-		<Button Text="Start Listening" Clicked="HandleStart_Clicked"/>
-		<Button Text="Stop Listening" Clicked="HandleStop_Clicked"/>
-		<Button Text="IsConnected" Clicked="HandleIsConnected_Clicked"/>
-		<Button Text="Types" Clicked="Types_Clicked"/>
-	</StackLayout>
+	<ScrollView>
+		<StackLayout Padding="10" Spacing="10" x:Name="MainStack">
+			<Button x:Name="connectivityButton" Text="Check Connectivity"/>
+			<Label x:Name="connected" Text="Is Connected: "/>
+			<Label x:Name="connectionTypes" Text="Connection Types:"/>
+			<Label x:Name="bandwidths" Text="Bandwidths: "/>
+			<Entry x:Name="host" Text="127.0.0.1"/>
+			<Label x:Name="canReach1"/>
+
+
+			<Entry x:Name="host4" Text="montemagno.com"/>
+			<Label x:Name="canReach4"/>
+
+			<Label Text="Remote Reachable"/>
+			<Entry x:Name="host2" Text="http://montemagno.com"/>
+			<Entry x:Name="port" Text="80" Keyboard="Numeric"/>
+			<Label x:Name="canReach2"/>
+
+
+			<Entry x:Name="host3" Text="http://montemagno.com"/>
+			<Label x:Name="canReach3"/>
+		</StackLayout>
+	</ScrollView>
 </ContentPage>

@@ -81,80 +81,94 @@ namespace Plugin.Connectivity
 			}
 		}
 
+		
 		/// <summary>
 		/// Tests if a host name is pingable
 		/// </summary>
 		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-		/// <param name="msTimeout">Timeout in milliseconds</param>
+		/// <param name="timeout">Timeout</param>
 		/// <returns></returns>
-		public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
+		public override async Task<bool> IsReachable(string host, TimeSpan timeout)
 		{
-			if (string.IsNullOrEmpty(host))
+			if (string.IsNullOrWhiteSpace(host))
 				throw new ArgumentNullException(nameof(host));
 
-			if (!IsConnected)
-				return false;
-
-			return await IsRemoteReachable(host, 80, msTimeout);
+			var cancellationTokenSource = new CancellationTokenSource();
+			cancellationTokenSource.CancelAfter(timeout);
+			try
+			{
+				return await Task.Run(() =>
+				{
+					try
+					{
+						return Reachability.IsHostReachable(host);
+					}
+					catch (Exception ex)
+					{
+						Debug.WriteLine($"IsReachable Error: {ex.Message}");
+					}
+					return false;
+				}, cancellationTokenSource.Token);
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine($"IsReachable Error: {ex.Message}");
+			}
+			return false;
 		}
 
 		/// <summary>
-		/// Tests if a remote host name is reachable 
+		/// Tests if a remote uri is reachable
 		/// </summary>
-		/// <param name="host">Host name can be a remote IP or URL of website</param>
-		/// <param name="port">Port to attempt to check is reachable.</param>
-		/// <param name="msTimeout">Timeout in milliseconds.</param>
-		/// <returns></returns>
-		public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout</param>
+		public override Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout)
 		{
-			if (string.IsNullOrEmpty(host))
-				throw new ArgumentNullException(nameof(host));
+			if (uri == null)
+				throw new ArgumentNullException(nameof(uri));
 
-			if (!IsConnected)
-				return false;
-
-			host = host.Replace("http://www.", string.Empty).
-					Replace("http://", string.Empty).
-					Replace("https://www.", string.Empty).
-					Replace("https://", string.Empty).
-					TrimEnd('/');
-
-
-			return await Task.Run(() =>
+			return Task.Run(() =>
 			{
 				try
 				{
-					var clientDone = new ManualResetEvent(false);
-					var reachable = false;
-
-					var hostEntry = new DnsEndPoint(host, port);
-
-					using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
+					using (var clientDone = new ManualResetEvent(false))
 					{
-						var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
-						socketEventArg.Completed += (s, e) =>
+						var reachable = false;
+
+						var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
+
+						using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
 						{
-							reachable = e.SocketError == SocketError.Success;
+							var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
 
-							clientDone.Set();
-						};
+							void handler(object sender, SocketAsyncEventArgs e)
+							{
+								reachable = e.SocketError == SocketError.Success;
+								socketEventArg.Completed -= handler;
+								clientDone.Set();
+							};
 
-						clientDone.Reset();
+							socketEventArg.Completed += handler;
 
-						socket.ConnectAsync(socketEventArg);
+							clientDone.Reset();
 
-						clientDone.WaitOne(msTimeout);
+							socket.ConnectAsync(socketEventArg);
 
-						return reachable;
+							clientDone.WaitOne(timeout);
+
+							return reachable;
+						}
 					}
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
+					Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
 					return false;
 				}
 			});
 		}
+		
+
 
 		/// <summary>
 		/// Gets the list of all active connection types.
@@ -184,10 +198,7 @@ namespace Plugin.Connectivity
 		/// <summary>
 		/// Not supported on iOS
 		/// </summary>
-		public override IEnumerable<UInt64> Bandwidths
-		{
-			get { return new UInt64[] { }; }
-		}
+		public override IEnumerable<UInt64> Bandwidths => new UInt64[] { };
 
 		private bool disposed = false;
 		/// <summary>

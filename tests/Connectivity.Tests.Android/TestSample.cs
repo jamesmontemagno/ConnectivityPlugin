@@ -34,10 +34,23 @@ namespace Connectivity.Tests
         [Test]
         public async void CanReachRemote()
         {
-            var canReach = await CrossConnectivity.Current.IsRemoteReachable("google.com");
+            var canReach = await CrossConnectivity.Current.IsRemoteReachable("http://google.com");
             Assert.IsTrue(canReach);
-        }
 
-        
-    }
+			canReach = await CrossConnectivity.Current.IsRemoteReachable(new Uri("http://google.com"));
+			Assert.IsTrue(canReach);
+
+			canReach = await CrossConnectivity.Current.IsRemoteReachable("http://google.com");
+			Assert.IsTrue(canReach);
+		}
+
+		[Test]
+		public async void CanReachRemote()
+		{
+			var canReach = await CrossConnectivity.Current.IsRemoteReachable("google.com");
+			Assert.IsTrue(canReach);
+		}
+
+
+	}
 }

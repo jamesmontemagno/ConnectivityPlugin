@@ -8,8 +8,9 @@ using Android.Content;
 using Android.Net;
 using Android.Net.Wifi;
 using Android.App;
-using Java.Net;
-
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Plugin.Connectivity
 {
@@ -109,28 +110,36 @@ namespace Plugin.Connectivity
         public override bool IsConnected => GetIsConnected(ConnectivityManager);
 
 
-        /// <summary>
-        /// Tests if a host name is pingable
-        /// </summary>
-        /// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-        /// <param name="msTimeout">Timeout in milliseconds</param>
-        /// <returns></returns>
-        public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
+		/// <summary>
+		/// Tests if a host name is pingable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="timespan">Timeout in milliseconds</param>
+		/// <returns></returns>
+		public override Task<bool> IsReachable(string host, TimeSpan timespan)
         {
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
+            if (string.IsNullOrWhiteSpace(host))
+                throw new ArgumentNullException(nameof(host));
 
-            if (!IsConnected)
-                return false;
-
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 bool reachable;
                 try
                 {
-                    reachable = InetAddress.GetByName(host).IsReachable(msTimeout);
+					var inetAddress = Java.Net.InetAddress.GetByName(host);
+
+					//Is reachable only works with IP Addresses, so let's validate first.
+					if(IPAddress.TryParse(host, out IPAddress address))
+					{
+						reachable = inetAddress.IsReachable((int)timespan.TotalMilliseconds);
+					}
+					else
+					{
+						//GetByName actually resolves out the host name, so it must be 
+						reachable = true;
+					}
                 }
-                catch (UnknownHostException ex)
+                catch (Java.Net.UnknownHostException ex)
                 {
                     Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
                     reachable = false;
@@ -145,68 +154,53 @@ namespace Plugin.Connectivity
 
         }
 
-        /// <summary> 
-        /// Tests if a remote host name is reachable 
-        /// </summary>
-        /// <param name="host">Host name can be a remote IP or URL of website</param>
-        /// <param name="port">Port to attempt to check is reachable.</param>
-        /// <param name="msTimeout">Timeout in milliseconds.</param>
-        /// <returns></returns>
-        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout in milliseconds.</param>
+		/// <returns></returns>
+		public override Task<bool> IsRemoteReachable(System.Uri uri, TimeSpan timeout)
         {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
-
-            if (!IsConnected)
-                return false;
-
-            host = host.Replace("http://www.", string.Empty).
-              Replace("http://", string.Empty).
-              Replace("https://www.", string.Empty).
-              Replace("https://", string.Empty).
-              TrimEnd('/');
-
-            return await Task.Run(async () =>
+            return Task.Run(() =>
             {
                 try
                 {
-                    var tcs = new TaskCompletionSource<InetSocketAddress>();
-                    new System.Threading.Thread(() =>
+                    using (var clientDone = new ManualResetEvent(false))
                     {
-                        /* this line can take minutes when on wifi with poor or none internet connectivity
-                        and Task.Delay solves it only if this is running on new thread (Task.Run does not help) */
-                        InetSocketAddress result = new InetSocketAddress(host, port);
+                        var reachable = false;
 
-                        if (!tcs.Task.IsCompleted)
-                            tcs.TrySetResult(result);
+                        var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
 
-                    }).Start();
+                        using (var socket = new Socket(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp))
+                        {
+                            var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
 
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(msTimeout);
+                            void handler(object sender, SocketAsyncEventArgs e)
+                            {
+                                reachable = e.SocketError == SocketError.Success;
+                                socketEventArg.Completed -= handler;
+                                clientDone.Set();
+                            };
 
-                        if (!tcs.Task.IsCompleted)
-                            tcs.TrySetResult(null);
-                    });
+                            socketEventArg.Completed += handler;
 
-                    var sockaddr = await tcs.Task;
+                            clientDone.Reset();
 
-                    if (sockaddr == null)
-                        return false;
+                            socket.ConnectAsync(socketEventArg);
 
-                    using (var sock = new Socket())
-                    {
+                            clientDone.WaitOne(timeout);
 
-                        await sock.ConnectAsync(sockaddr, msTimeout);
-                        return true;
-
+                            return reachable;
+                        }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
+                    Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
                     return false;
                 }
             });
