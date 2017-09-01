@@ -125,10 +125,10 @@ namespace Plugin.Connectivity
         {
             if (string.IsNullOrWhiteSpace(host))
                 return false;
-
+			
             using (var r = new NetworkReachability(host))
             {
-
+				
 
 				if (r.TryGetFlags(out NetworkReachabilityFlags flags))
 				{

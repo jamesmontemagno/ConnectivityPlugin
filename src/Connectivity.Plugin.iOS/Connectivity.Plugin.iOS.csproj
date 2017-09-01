@@ -46,12 +46,18 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Xamarin.iOS" />
+    <Reference Include="Xamarin.SimplePing.iOS, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xamarin.SimplePing.1.4.0\lib\XamariniOS10\Xamarin.SimplePing.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Connectivity.Plugin.Abstractions\Connectivity.Plugin.Abstractions.csproj">
       <Project>{503c3c83-390a-48ef-845c-df4c928cb4a9}</Project>
       <Name>Connectivity.Plugin.Abstractions</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="..\Connectivity.Plugin.Shared.Apple\Connectivity.Plugin.Shared.Apple.projitems" Label="Shared" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

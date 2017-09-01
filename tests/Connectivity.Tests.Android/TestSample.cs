@@ -45,7 +45,7 @@ namespace Connectivity.Tests
 		}
 
 		[Test]
-		public async void CanReachRemote()
+		public async void CanReachRemote2()
 		{
 			var canReach = await CrossConnectivity.Current.IsRemoteReachable("google.com");
 			Assert.IsTrue(canReach);

@@ -1,3 +1,9 @@
+## 4.0.0
+* [All] New Implementations of IsReachable and IsRemoteReachable
+* IsReachable: Checks if host is reachable.
+* IsRemoteReachable: Now only takes in a valid Uri with or without a port to check connectivity to a service.
+* IsRemoteReachable: Must have a valid Uri scheme.
+
 ### 3.0.2
 * [Android] Bandwidth as bits per second instead of mbps
 * [Android] No longer show connection types that aren't available

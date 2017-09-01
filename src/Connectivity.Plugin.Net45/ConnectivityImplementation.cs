@@ -184,34 +184,34 @@ namespace Plugin.Connectivity
 			{
 				try
 				{
-					using (var clientDone = new ManualResetEvent(false))
+					var clientDone = new ManualResetEvent(false);
+					
+					var reachable = false;
+
+					var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
+
+					using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
 					{
-						var reachable = false;
+						var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
 
-						var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
-
-						using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
+						void handler(object sender, SocketAsyncEventArgs e)
 						{
-							var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
+							reachable = e.SocketError == SocketError.Success;
+							socketEventArg.Completed -= handler;
+							clientDone.Set();
+						};
 
-							void handler(object sender, SocketAsyncEventArgs e)
-							{
-								reachable = e.SocketError == SocketError.Success;
-								socketEventArg.Completed -= handler;
-								clientDone.Set();
-							};
+						socketEventArg.Completed += handler;
 
-							socketEventArg.Completed += handler;
+						clientDone.Reset();
 
-							clientDone.Reset();
+						socket.ConnectAsync(socketEventArg);
 
-							socket.ConnectAsync(socketEventArg);
+						clientDone.WaitOne(timeout);
 
-							clientDone.WaitOne(timeout);
-
-							return reachable;
-						}
+						return reachable;
 					}
+					
 				}
 				catch (Exception ex)
 				{
