@@ -14,7 +14,7 @@
 			<Label x:Name="canReach4"/>
 
 			<Label Text="Remote Reachable"/>
-			<Entry x:Name="host2" Text="http://montemagno.com"/>
+			<Entry x:Name="host2" Text="http://montemagno.com/monkeys.json"/>
 			<Entry x:Name="port" Text="80" Keyboard="Numeric"/>
 			<Label x:Name="canReach2"/>
 
