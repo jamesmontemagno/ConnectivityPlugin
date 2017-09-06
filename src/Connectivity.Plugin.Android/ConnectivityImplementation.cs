@@ -244,7 +244,7 @@ namespace Plugin.Connectivity
                     if (info == null || !info.IsAvailable)
                         continue;
 
-                    yield return GetConnectionType(info.Type);
+                    yield return GetConnectionType(info.Type, info.TypeName);
                 }
             }
             else
@@ -254,14 +254,15 @@ namespace Plugin.Connectivity
                     if (info == null || !info.IsAvailable)
                         continue;
 
-                    yield return GetConnectionType(info.Type);
+                    yield return GetConnectionType(info.Type, info.TypeName);
                 }
             }
 
         }
 
-        public static ConnectionType GetConnectionType(ConnectivityType connectivityType)
+        public static ConnectionType GetConnectionType(ConnectivityType connectivityType, string typeName)
         {
+
             switch (connectivityType)
             {
                 case ConnectivityType.Ethernet:
@@ -280,7 +281,29 @@ namespace Plugin.Connectivity
                 case ConnectivityType.Dummy:
                     return ConnectionType.Other;
                 default:
-                    return ConnectionType.Other;
+					if (string.IsNullOrWhiteSpace(typeName))
+						return ConnectionType.Other;
+
+					var typeNameLower = typeName.ToLowerInvariant();
+					if (typeNameLower.Contains("mobile"))
+						return ConnectionType.Cellular;
+
+					if (typeNameLower.Contains("wifi"))
+						return ConnectionType.WiFi;
+
+
+					if (typeNameLower.Contains("wimax"))
+						return ConnectionType.Wimax;
+
+
+					if (typeNameLower.Contains("ethernet"))
+						return ConnectionType.Desktop;
+
+
+					if (typeNameLower.Contains("bluetooth"))
+						return ConnectionType.Bluetooth;
+
+					return ConnectionType.Other;
             }
         }
 
