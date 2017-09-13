@@ -49,7 +49,7 @@ Write-Host "Preparing to run build script..."
 $PS_SCRIPT_ROOT = split-path -parent $MyInvocation.MyCommand.Definition;
 $TOOLS_DIR = Join-Path $PSScriptRoot "tools"
 $NUGET_EXE = Join-Path $TOOLS_DIR "nuget.exe"
-$NUGET_URL = "http://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
+$NUGET3_EXE = Join-Path $TOOLS_DIR "nuget3.exe"
 $CAKE_EXE = Join-Path $TOOLS_DIR "Cake/Cake.exe"
 $PACKAGES_CONFIG = Join-Path $TOOLS_DIR "packages.config"
 $CAKE_PACKAGES_CONFIG = Join-Path $PSScriptRoot "cake.packages.config"
@@ -105,15 +105,16 @@ if (!(Test-Path $PACKAGES_CONFIG)) {
 #    }
 #}
 
-# Try download NuGet.exe if not exists
+# Make sure NuGet exists where we expect it.
 if (!(Test-Path $NUGET_EXE)) {
-    Write-Verbose -Message "Downloading NuGet.exe..."
-    try {
-        (New-Object System.Net.WebClient).DownloadFile($NUGET_URL, $NUGET_EXE)
-    } catch {
-        Throw "Could not download NuGet.exe."
-    }
+    Invoke-WebRequest -Uri http://nuget.org/nuget.exe -OutFile $NUGET_EXE
 }
+
+# Make sure NuGet exists where we expect it.
+if (!(Test-Path $NUGET3_EXE)) {
+    Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile $NUGET3_EXE
+}
+
 
 # Save nuget.exe path to environment to be available to child processed
 $ENV:NUGET_EXE = $NUGET_EXE
