@@ -69,7 +69,22 @@ namespace Plugin.Connectivity
                     {
                         try
                         {
-                            var info = manager.GetNetworkInfo(network);
+							var capabilities = manager.GetNetworkCapabilities(network);
+
+							if (capabilities == null)
+								continue;
+
+							//check to see if it has the internet capability
+							if (!capabilities.HasCapability(NetCapability.Internet))
+								continue;
+
+							//if on 23+ then we can also check validated
+							//Indicates that connectivity on this network was successfully validated.
+							//this means that you can be connected to wifi and has internet
+							if ((int)Android.OS.Build.VERSION.SdkInt >= 23 && !capabilities.HasCapability(NetCapability.Validated))
+								continue;
+
+							var info = manager.GetNetworkInfo(network);
 
                             if (info == null || !info.IsAvailable)
                                 continue;
@@ -85,8 +100,10 @@ namespace Plugin.Connectivity
                 }
                 else
                 {
-                    foreach (var info in manager.GetAllNetworkInfo())
-                    {
+#pragma warning disable CS0618 // Type or member is obsolete
+					foreach (var info in manager.GetAllNetworkInfo())
+#pragma warning restore CS0618 // Type or member is obsolete
+					{
                         if (info == null || !info.IsAvailable)
                             continue;
                         
