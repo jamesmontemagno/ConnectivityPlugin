@@ -4,6 +4,9 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>Plugin.Connectivity</AssemblyName>
     <RootNamespace>Plugin.Connectivity</RootNamespace>
+
+    <!-- This is a temporary workaround for https://github.com/dotnet/sdk/issues/955 -->
+    <DebugType>Full</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
