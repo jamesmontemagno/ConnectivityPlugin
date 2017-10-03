@@ -1,4 +1,4 @@
-version: 3.0.4-beta{build}
+version: 3.0.4.{build}-beta
 image: Visual Studio 2017
 configuration: Release
 assembly_info:
