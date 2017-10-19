@@ -19,7 +19,7 @@ using System.Collections.Generic;
 namespace Plugin.Connectivity
 {
     /// <summary>
-    /// Status of newtowkr enum
+    /// Status of network enum
     /// </summary>
     [Foundation.Preserve(AllMembers = true)]
     public enum NetworkStatus
@@ -50,7 +50,7 @@ namespace Plugin.Connectivity
         public static string HostName = "www.google.com";
 
         /// <summary>
-        /// Checks if reachable without requireing a connection
+        /// Checks if reachable without requiring a connection
         /// </summary>
         /// <param name="flags"></param>
         /// <returns></returns>
