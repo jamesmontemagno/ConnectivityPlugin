@@ -135,7 +135,7 @@ namespace Plugin.Connectivity
         public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
         {
             if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
+                throw new ArgumentNullException(nameof(host));
 
             if (!IsConnected)
                 return false;
@@ -173,7 +173,7 @@ namespace Plugin.Connectivity
         {
 
             if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
+                throw new ArgumentNullException(nameof(host));
 
             if (!IsConnected)
                 return false;
@@ -324,7 +324,6 @@ namespace Plugin.Connectivity
             }
         }
 
-
         /// <summary>
         /// Retrieves a list of available bandwidths for the platform.
         /// Only active connections.
@@ -360,9 +359,6 @@ namespace Plugin.Connectivity
             {
                 if (disposing)
                 {
-
-
-
                     if (receiver != null)
                         Application.Context.UnregisterReceiver(receiver);
 
@@ -378,7 +374,6 @@ namespace Plugin.Connectivity
                         connectivityManager.Dispose();
                         connectivityManager = null;
                     }
-
                 }
 
                 disposed = true;
