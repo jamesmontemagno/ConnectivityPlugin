@@ -74,6 +74,8 @@
        <!--Net 4.5-->
      <file src="src\Connectivity.Plugin.Net45\bin\Release\Plugin.Connectivity.*" target="lib\net45" />
     
-
+       <!--Net Core 2.0-->
+     <file src="src\Connectivity.Plugin.NetCore\bin\Release\netcoreapp2.0\Plugin.Connectivity.*" target="lib\netcore20" />
+    
    </files>
 </package>

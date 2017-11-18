@@ -13,10 +13,14 @@ namespace Plugin.Connectivity
     /// </summary>
     public class ConnectivityImplementation : BaseConnectivity
     {
-        private readonly IList<ConnectionType> connectionTypes = new List<ConnectionType>();
-        private readonly IList<ulong> bandwidths = new List<ulong>();
-        private bool isConnected;
+        readonly IList<ConnectionType> connectionTypes = new List<ConnectionType>();
+        readonly IList<ulong> bandwidths = new List<ulong>();
+        bool isConnected;
 
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Plugin.Connectivity.ConnectivityImplementation"/> class.
+        /// </summary>
         public ConnectivityImplementation()
         {
             NetworkChange.NetworkAddressChanged += NetworkChangeOnNetworkAddressChanged;
