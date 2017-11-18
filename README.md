@@ -22,6 +22,7 @@ Get started by reading through the [Connectivity Plugin documentation](https://j
 |Windows 10 UWP|10+|
 |Xamarin.Mac|All|
 |.NET 4.5/WPF|All|
+|.NET Core|2.0+|
 
 ### Created By: [@JamesMontemagno](http://twitter.com/jamesmontemagno)
 * Twitter: [@JamesMontemagno](http://twitter.com/jamesmontemagno)
