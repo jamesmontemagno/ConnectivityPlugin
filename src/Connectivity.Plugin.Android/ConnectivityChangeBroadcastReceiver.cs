@@ -17,12 +17,12 @@ namespace Plugin.Connectivity
     public class ConnectivityChangeBroadcastReceiver : BroadcastReceiver
     {
         /// <summary>
-        /// Action to call when connetivity changes
+        /// Action to call when connectivity changes
         /// </summary>
         public static Action<ConnectivityChangedEventArgs> ConnectionChanged;
 
         /// <summary>
-        /// Action to call when connetivity type changes
+        /// Action to call when connectivity type changes
         /// </summary>
         public static Action<ConnectivityTypeChangedEventArgs> ConnectionTypeChanged;
 

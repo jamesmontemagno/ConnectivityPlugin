@@ -12,9 +12,6 @@ namespace ConnectivitySample
 		static ContentPage page;
 		public App()
 		{
-
-
-
 			var connectivityButton = new Button
 			{
 				Text = "Connectivity Test"
@@ -40,7 +37,6 @@ namespace ConnectivitySample
 				Text = "127.0.0.1"
 			};
 
-
 			var host2 = new Entry
 			{
 				Text = "montemagno.com"
@@ -62,7 +58,6 @@ namespace ConnectivitySample
 				Text = "Can reach2: "
 			};
 
-
 			connectivityButton.Clicked += async (sender, args) =>
 			{
 				connected.Text = CrossConnectivity.Current.IsConnected ? "Connected" : "No Connection";
@@ -80,29 +75,21 @@ namespace ConnectivitySample
 				try
 				{
 					canReach1.Text = await CrossConnectivity.Current.IsReachable(host.Text) ? "Reachable" : "Not reachable";
-
 				}
 				catch (Exception ex)
 				{
-
 				}
 				try
 				{
 					canReach2.Text = await CrossConnectivity.Current.IsRemoteReachable(host2.Text, int.Parse(port.Text)) ? "Reachable" : "Not reachable";
-
 				}
 				catch (Exception ex)
 				{
-
 				}
-
-
 			};
-
 
 			CrossConnectivity.Current.ConnectivityChanged += (sender, args) =>
 			{
-
 				page.DisplayAlert("Connectivity Changed", "IsConnected: " + CrossConnectivity.Current.IsConnected + "  Args:" + args.IsConnected.ToString(), "OK");
 			};
 
@@ -110,7 +97,6 @@ namespace ConnectivitySample
             {
                 page.DisplayAlert("Connectivity  Type Changed", "Types: " + args.ConnectionTypes.FirstOrDefault(), "OK");
             };
-
 
             // The root page of your application
             MainPage = page = new ContentPage

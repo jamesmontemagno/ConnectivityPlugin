@@ -318,7 +318,6 @@ namespace Plugin.Connectivity
             }
         }
 
-
         /// <summary>
         /// Retrieves a list of available bandwidths for the platform.
         /// Only active connections.
@@ -354,9 +353,6 @@ namespace Plugin.Connectivity
             {
                 if (disposing)
                 {
-
-
-
                     if (receiver != null)
                         Application.Context.UnregisterReceiver(receiver);
 
@@ -372,7 +368,6 @@ namespace Plugin.Connectivity
                         connectivityManager.Dispose();
                         connectivityManager = null;
                     }
-
                 }
 
                 disposed = true;

@@ -2,7 +2,7 @@
 There are a few properties that can be used to easily check connection information using the plugin.
 
 ### Check Connectivity
-`IsConnected`: The easiest and most common use case of simply chcking if there is interent access:
+`IsConnected`: The easiest and most common use case of simply checking if there is internet access:
 
 ```csharp
 /// <summary>
