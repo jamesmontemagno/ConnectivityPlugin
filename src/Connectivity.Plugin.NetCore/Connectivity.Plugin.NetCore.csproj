@@ -4,6 +4,9 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RootNamespace>Plugin.Connectivity</RootNamespace>
     <AssemblyName>Plugin.Connectivity</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyFileVersion>1.0.0.0</AssemblyFileVersion>
+    <Version>1.0.0.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
