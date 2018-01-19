@@ -20,6 +20,7 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+unit-test-tools
 
 # Visual Studio 2015 cache/options directory
 .vs/
