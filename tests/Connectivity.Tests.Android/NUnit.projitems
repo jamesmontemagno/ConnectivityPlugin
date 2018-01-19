@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <TestApk Include="$(MyBuildOutputPath)/Connectivity.Tests.Android.Connectivity.Tests.Android-Signed.apk">
+      <Package>Connectivity.Tests.Android.Connectivity.Tests.Android</Package>
+      <InstrumentationType>app.tests.TestInstrumentation</InstrumentationType>
+      <ResultsPath>$(MyBuildOutputPath)/test-results.xml</ResultsPath>
+    </TestApk>
+  </ItemGroup>
+</Project>
