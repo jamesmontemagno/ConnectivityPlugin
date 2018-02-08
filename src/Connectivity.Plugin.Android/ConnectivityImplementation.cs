@@ -80,8 +80,9 @@ namespace Plugin.Connectivity
 							//if on 23+ then we can also check validated
 							//Indicates that connectivity on this network was successfully validated.
 							//this means that you can be connected to wifi and has internet
-							if ((int)Android.OS.Build.VERSION.SdkInt >= 23 && !capabilities.HasCapability(NetCapability.Validated))
-								continue;
+							//2/7/18: We are removing this because apparently devices aren't reporting back the correct information :(
+							//if ((int)Android.OS.Build.VERSION.SdkInt >= 23 && !capabilities.HasCapability(NetCapability.Validated))
+							//	continue;
 
 							var info = manager.GetNetworkInfo(network);
 
