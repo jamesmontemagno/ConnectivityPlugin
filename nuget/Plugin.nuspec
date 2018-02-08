@@ -50,6 +50,8 @@
          </group>
          <group targetFramework="xamarinwatchos">
          </group>
+         <group targetFramework="tizen40">
+         </group>
        </dependencies>
    </metadata>
    <files> 
@@ -81,5 +83,8 @@
        <!--Net Core 2.0-->
      <file src="src\Connectivity.Plugin.NetCore\bin\Release\netcoreapp2.0\Plugin.Connectivity.*" target="lib\netcoreapp2.0" />
     
+     <!--Tizen-->
+     <file src="src\Connectivity.Plugin.Tizen\bin\Release\tizen40\Plugin.Connectivity.*" target="lib\tizen40" />
+
    </files>
 </package>

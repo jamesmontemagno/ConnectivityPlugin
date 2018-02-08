@@ -39,10 +39,17 @@ public bool DoIHaveInternet()
         return true;
         
     //Do this only if you need to and aren't listening to any other events as they will not fire.
-    using(var connectivity = CrossConnectivity.Current)
-    {
-        return connectivity.IsConnected;
-    }
+    var connectivity = CrossConnectivity.Current;
+    
+	try
+	{
+    	return connectivity.IsConnected;
+	}
+	finally
+	{
+		CrossConnectivity.Dispose();
+	}
+    
 }
 ```
 
