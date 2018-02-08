@@ -1,3 +1,6 @@
+### 3.2.0
+* [Android] Fixes for Android #133, #142, #134 around API 23+ Validated check
+
 ### 3.1.0
 * [Android] Bandwidth as bits per second instead of mbps
 * [Android] No longer show connection types that aren't available
