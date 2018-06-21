@@ -11,7 +11,7 @@ namespace Plugin.Connectivity
     /// <summary>
     /// Broadcast receiver to get notifications from Android on connectivity change
     /// </summary>
-    [BroadcastReceiver(Enabled = true, Label = "Connectivity Plugin Broadcast Receiver")]
+    [BroadcastReceiver(Enabled = true, Exported = false, Label = "Connectivity Plugin Broadcast Receiver")]
     //[IntentFilter(new[] { "android.net.conn.CONNECTIVITY_CHANGE" })]
     [Android.Runtime.Preserve(AllMembers = true)]
     public class ConnectivityChangeBroadcastReceiver : BroadcastReceiver
