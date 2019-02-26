@@ -26,6 +26,7 @@ namespace Plugin.Connectivity
 			//start an update on the background.
 			initialTask = Task.Run(() => { UpdateConnected(false);});
 			Reachability.ReachabilityChanged += ReachabilityChanged;
+			UpdateConnected();
 		}
 
 		async void ReachabilityChanged(object sender, EventArgs e)
@@ -57,8 +58,8 @@ namespace Plugin.Connectivity
 
 				var connectionTypes = this.ConnectionTypes.ToArray();
 				OnConnectivityTypeChanged(new ConnectivityTypeChangedEventArgs { IsConnected = isConnected, ConnectionTypes = connectionTypes });
+				previousInternetStatus = internetStatus;
 			}
-			previousInternetStatus = internetStatus;
 		}
 
 
