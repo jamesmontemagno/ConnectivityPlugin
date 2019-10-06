@@ -60,12 +60,18 @@ namespace Plugin.Connectivity
         {
             try
             {
-
-                //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
-                //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
-                if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
+				var sdkVersion = (int)Android.OS.Build.VERSION.SdkInt;
+				//When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
+				//https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
+				if (sdkVersion >= 21)
                 {
-                    foreach (var network in manager.GetAllNetworks())
+					var networks = manager.GetAllNetworks();
+					if(networks.Count() == 0 && sdkVersion < 23)
+					{
+						return QueryNetworkInfo();
+					}
+
+					foreach (var network in networks)
                     {
                         try
                         {
@@ -77,13 +83,6 @@ namespace Plugin.Connectivity
 							//check to see if it has the internet capability
 							if (!capabilities.HasCapability(NetCapability.Internet))
 								continue;
-
-							//if on 23+ then we can also check validated
-							//Indicates that connectivity on this network was successfully validated.
-							//this means that you can be connected to wifi and has internet
-							//2/7/18: We are removing this because apparently devices aren't reporting back the correct information :(
-							//if ((int)Android.OS.Build.VERSION.SdkInt >= 23 && !capabilities.HasCapability(NetCapability.Validated))
-							//	continue;
 
 							var info = manager.GetNetworkInfo(network);
 
@@ -101,16 +100,7 @@ namespace Plugin.Connectivity
                 }
                 else
                 {
-#pragma warning disable CS0618 // Type or member is obsolete
-					foreach (var info in manager.GetAllNetworkInfo())
-#pragma warning restore CS0618 // Type or member is obsolete
-					{
-                        if (info == null || !info.IsAvailable)
-                            continue;
-                        
-                        if (info.IsConnected)
-                            return true;
-                    }
+					return QueryNetworkInfo();
                 }
 
                 return false;
@@ -120,6 +110,22 @@ namespace Plugin.Connectivity
                 Debug.WriteLine("Unable to get connected state - do you have ACCESS_NETWORK_STATE permission? - error: {0}", e);
                 return false;
             }
+
+			bool QueryNetworkInfo()
+			{
+#pragma warning disable CS0618 // Type or member is obsolete
+				foreach (var info in manager.GetAllNetworkInfo())
+#pragma warning restore CS0618 // Type or member is obsolete
+				{
+					if (info == null || !info.IsAvailable)
+						continue;
+
+					if (info.IsConnected)
+						return true;
+				}
+
+				return false;
+			}
         }
 
         /// <summary>

@@ -9,8 +9,7 @@ Get started by reading through the [Connectivity Plugin documentation](https://j
 * Available on NuGet: [Xam.Plugin.Connectivity](http://www.nuget.org/packages/Xam.Plugin.Connectivity) [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
 
 ## Build: 
-* [![Build status](https://ci.appveyor.com/api/projects/status/k6l4x6ovp5ysfbar?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/connectivityplugin)
-* CI NuGet Feed: https://ci.appveyor.com/nuget/connectivityplugin
+
 
 ## Platform Support
 
@@ -32,7 +31,7 @@ Get started by reading through the [Connectivity Plugin documentation](https://j
 * Video: [The Xamarin Show on Channel 9](http://xamarinshow.com), [YouTube Channel](https://www.youtube.com/jamesmontemagno) 
 # Contribution
 
-Thanks you for your interest in contributing to Settings plugin! In this section we'll outline what you need to know about contributing and how to get started.
+Thank you for your interest in contributing to Connectivity plugin! In this section we'll outline what you need to know about contributing and how to get started.
 
 ### Bug Fixes
 Please browse open issues, if you're looking to fix something, it's possible that someone already reported it. Additionally you select any `up-for-grabs` items
