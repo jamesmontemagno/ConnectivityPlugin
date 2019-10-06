@@ -3,8 +3,8 @@
 	<PropertyGroup>
 		<!--Work around so the conditions work below-->
 		<TargetFrameworks></TargetFrameworks>
-		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid81;uap10.0.16299;Xamarin.TVOS10;Xamarin.Mac20;Tizen40;netcoreapp2.0;net45</TargetFrameworks>
-		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid81</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' == 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid60;MonoAndroid70;MonoAndroid71;MonoAndroid80;MonoAndroid81;MonoAndroid90;uap10.0.16299;Xamarin.TVOS10;Xamarin.Mac20;Tizen40;netcoreapp2.0;net45</TargetFrameworks>
+		<TargetFrameworks Condition=" '$(OS)' != 'Windows_NT' ">netstandard1.0;netstandard2.0;Xamarin.iOS10;MonoAndroid60;MonoAndroid70;MonoAndroid71;MonoAndroid80;MonoAndroid81;MonoAndroid90;</TargetFrameworks>
 
 		<AssemblyName>Plugin.Connectivity</AssemblyName>
 		<RootNamespace>Plugin.Connectivity</RootNamespace>
@@ -99,7 +99,8 @@
   </ItemGroup>
   
    <ItemGroup Condition=" $(TargetFramework.StartsWith('netcoreapp')) ">
-    <Compile Include="**\*.netcore.cs" />
+		 <Compile Include="**\*.netcore.cs" />
+		 <Compile Include="**\*.netcore.*.cs" />
   </ItemGroup>
   
   <ItemGroup Condition=" $(TargetFramework.StartsWith('Tizen')) ">
@@ -108,7 +109,8 @@
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net45')) ">
-    <Compile Include="**\*.net45.cs" />
+		<Compile Include="**\*.net45.cs" />
+		<Compile Include="**\*.net45.*.cs" />
   </ItemGroup>
 
 </Project>
