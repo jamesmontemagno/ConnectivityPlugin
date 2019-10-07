@@ -12,6 +12,10 @@ using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 
+
+[assembly: UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
+[assembly: UsesPermission(Android.Manifest.Permission.AccessWifiState)]
+
 namespace Plugin.Connectivity
 {
     /// <summary>
