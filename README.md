@@ -9,7 +9,14 @@ Get started by reading through the [Connectivity Plugin documentation](https://j
 * Available on NuGet: [Xam.Plugin.Connectivity](http://www.nuget.org/packages/Xam.Plugin.Connectivity) [![NuGet](https://img.shields.io/nuget/v/Xam.Plugin.Connectivity.svg?label=NuGet)](https://www.nuget.org/packages/Xam.Plugin.Connectivity/)
 
 ## Build: 
+* [![Build status](https://ci.appveyor.com/api/projects/status/k6l4x6ovp5ysfbar?svg=true)](https://ci.appveyor.com/project/JamesMontemagno/connectivityplugin)
+* CI NuGet Feed: https://ci.appveyor.com/nuget/connectivityplugin
 
+### The Future: [Xamarin.Essentials](https://docs.microsoft.com/xamarin/essentials/index?WT.mc_id=docs-github-jamont)
+
+I have been working on Plugins for Xamarin for a long time now. Through the years I have always wanted to create a single, optimized, and official package from the Xamarin team at Microsoft that could easily be consumed by any application. The time is now with [Xamarin.Essentials](https://docs.microsoft.com/xamarin/essentials/index?WT.mc_id=docs-github-jamont), which offers over 50 cross-platform native APIs in a single optimized package. I worked on this new library with an amazing team of developers and I highly highly highly recommend you check it out.
+
+I will continue to work and maintain my Plugins, but I do recommend you checkout Xamarin.Essentials to see if it is a great fit your app as it has been for all of mine!
 
 ## Platform Support
 
@@ -31,7 +38,7 @@ Get started by reading through the [Connectivity Plugin documentation](https://j
 * Video: [The Xamarin Show on Channel 9](http://xamarinshow.com), [YouTube Channel](https://www.youtube.com/jamesmontemagno) 
 # Contribution
 
-Thank you for your interest in contributing to Connectivity plugin! In this section we'll outline what you need to know about contributing and how to get started.
+Thank you for your interest in contributing to the Connectivity plugin! In this section we'll outline what you need to know about contributing and how to get started.
 
 ### Bug Fixes
 Please browse open issues, if you're looking to fix something, it's possible that someone already reported it. Additionally you select any `up-for-grabs` items
