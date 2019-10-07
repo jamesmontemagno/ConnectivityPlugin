@@ -1,4 +1,4 @@
-## 4.0.0
+## 5.0.0
 * [All] New Implementations of IsReachable and IsRemoteReachable
 * IsReachable: Checks if host is reachable.
 * IsRemoteReachable: Now only takes in a valid Uri with or without a port to check connectivity to a service.
