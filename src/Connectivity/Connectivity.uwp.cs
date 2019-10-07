@@ -32,7 +32,7 @@ namespace Plugin.Connectivity
             var previous = isConnected;
             var newConnected = IsConnected;
 
-            var dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
+            var dispatcher = CoreApplication.MainView.CoreWindow?.Dispatcher;
 
             if (dispatcher != null)
             {
