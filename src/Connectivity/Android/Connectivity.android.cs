@@ -230,18 +230,13 @@ namespace Plugin.Connectivity
             });
         }
 
-        /// <summary>
-        /// Gets the list of all active connection types.
-        /// </summary>
-        public override IEnumerable<ConnectionType> ConnectionTypes
-        {
-            get
-            {
-                return GetConnectionTypes(ConnectivityManager);
-            }
-        }
+		/// <summary>
+		/// Gets the list of all active connection types.
+		/// </summary>
+		public override IEnumerable<ConnectionType> ConnectionTypes =>
+			GetConnectionTypes(ConnectivityManager).Distinct();
 
-        public static IEnumerable<ConnectionType> GetConnectionTypes(ConnectivityManager manager)
+		public static IEnumerable<ConnectionType> GetConnectionTypes(ConnectivityManager manager)
         {
             //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
             //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
