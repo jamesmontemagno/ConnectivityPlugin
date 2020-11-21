@@ -4,17 +4,24 @@ On occassion you may want to check not only if the device has internet, but also
 
 
 #### Ping Remote Server
-The most common use case is to ping a remote server or remote IP address to see if it up and running.
+The most common use case is to check to see if a remote uri is reachable. This could include a web server, api call, or host with a specific port.
 
 ```csharp
 /// <summary>
-/// Tests if a remote host name is reachable (no http:// or www.)
+/// Tests if a remote uri is reachable
 /// </summary>
-/// <param name="host">Host name can be a remote IP or URL of website</param>
-/// <param name="port">Port to attempt to check is reachable.</param>
-/// <param name="msTimeout">Timeout in milliseconds.</param>
+/// <param name="uri">Full valid Uri to check for reachability</param>
+/// <param name="timeout">Timeout</param>
 /// <returns></returns>
-Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000);
+Task<bool> IsRemoteReachable(string uri, TimeSpan timeout);
+
+/// <summary>
+/// Tests if a remote uri is reachable
+/// </summary>
+/// <param name="uri">Full valid Uri to check for reachability</param>
+/// <param name="timeout">Timeout.</param>
+/// <returns></returns>
+Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout);
 ```
 
 Example:
@@ -25,24 +32,24 @@ public async Task<bool> IsBlogReachableAndRunning()
     if(!connectivity.IsConnected)
       return false;
 
-    var reachable = await connectivity.IsRemoteReachable("motzcod.es");
+    var reachable = await connectivity.IsRemoteReachab("montemagno.com/monkeys.json", TimeSpan.FromSecond(5));
 
     return reachable;
 }
 
 ```
 
-## Ping Internal Host
-On rarer occassions a local machine or local IP on the network may need to be pinged.
+## Ping Host
+On rarer occassions a local machine, hostname, or local IP on the network may need to be pinged.
 
 ```csharp
 /// <summary>
-/// Tests if a host name is pingable
+/// Tests if a host name is reachable
 /// </summary>
 /// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-/// <param name="msTimeout">Timeout in milliseconds</param>
+/// <param name="timeout">Timeout</param>
 /// <returns></returns>
-Task<bool> IsReachable(string host, int msTimeout = 5000);
+Task<bool> IsReachable(string host, TimeSpan timespan);
 ```
 
 <= Back to [Table of Contents](README.md)

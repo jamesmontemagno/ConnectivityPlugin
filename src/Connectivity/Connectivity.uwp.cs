@@ -13,7 +13,7 @@ using System.Threading;
 namespace Plugin.Connectivity
 {
     /// <summary>
-    /// Connectivity Implementation for WinRT
+    /// Connectivity Implementation for Windows
     /// </summary>
     public class ConnectivityImplementation : BaseConnectivity
     {
@@ -74,28 +74,24 @@ namespace Plugin.Connectivity
         }
 
 
-        /// <summary>
-        /// Checks if remote is reachable. RT apps cannot do loopback so this will alway return false.
-        /// You can use it to check remote calls though.
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="msTimeout"></param>
-        /// <returns></returns>
-        public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
-        {
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
+		/// <summary>
+		/// Tests if a host name is pingable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="timeout">Timeout</param>
+		/// <returns></returns>
+		public override async Task<bool> IsReachable(string host, TimeSpan timeout)
+		{
+			if (string.IsNullOrWhiteSpace(host))
+				throw new ArgumentNullException(nameof(host));
 
-            if (!IsConnected)
-                return false;
-
-            try
+			try
             {
                 var serverHost = new HostName(host);
                 using (var client = new StreamSocket())
                 {
                     var cancellationTokenSource = new CancellationTokenSource();
-                    cancellationTokenSource.CancelAfter(msTimeout);
+                    cancellationTokenSource.CancelAfter(timeout);
 
                     await client.ConnectAsync(serverHost, "http").AsTask(cancellationTokenSource.Token);
                     return true;
@@ -110,37 +106,24 @@ namespace Plugin.Connectivity
             }
         }
 
-        /// <summary>
-        /// Tests if a remote host name is reachable 
-        /// </summary>
-        /// <param name="host">Host name can be a remote IP or URL of website</param>
-        /// <param name="port">Port to attempt to check is reachable.</param>
-        /// <param name="msTimeout">Timeout in milliseconds.</param>
-        /// <returns></returns>
-        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
-        {
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException("host");
-
-            if (!IsConnected)
-                return false;
-
-            host = host.Replace("http://www.", string.Empty).
-              Replace("http://", string.Empty).
-              Replace("https://www.", string.Empty).
-              Replace("https://", string.Empty).
-              TrimEnd('/');
-
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout</param>
+		public override async Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout)
+		{
+            
             try
             {
                 using (var tcpClient = new StreamSocket())
                 {
                     var cancellationTokenSource = new CancellationTokenSource();
-                    cancellationTokenSource.CancelAfter(msTimeout);
+                    cancellationTokenSource.CancelAfter(timeout);
 
                     await tcpClient.ConnectAsync(
-                        new Windows.Networking.HostName(host),
-                        port.ToString(),
+                        new HostName(uri.Host),
+                        uri.Port.ToString(),
                         SocketProtectionLevel.PlainSocket).AsTask(cancellationTokenSource.Token);
 
                     var localIp = tcpClient.Information.LocalAddress.DisplayName;
@@ -153,7 +136,7 @@ namespace Plugin.Connectivity
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
+                Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
                 return false;
             }
         }

@@ -7,15 +7,17 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq;
-
+#if __IOS__ || __MACOS__
+using Xamarin.SimplePing;
+#endif
 
 namespace Plugin.Connectivity
 {
-    /// <summary>
-    /// Implementation for Connectivity
-    /// </summary>
-    [Foundation.Preserve(AllMembers = true)]
-    public class ConnectivityImplementation : BaseConnectivity
+	/// <summary>
+	/// Implementation for Connectivity
+	/// </summary>
+	[Foundation.Preserve(AllMembers = true)]
+	public class ConnectivityImplementation : BaseConnectivity
 	{
 		Task initialTask = null;
 		/// <summary>
@@ -24,7 +26,7 @@ namespace Plugin.Connectivity
 		public ConnectivityImplementation()
 		{
 			//start an update on the background.
-			initialTask = Task.Run(() => { UpdateConnected(false);});
+			initialTask = Task.Run(() => { UpdateConnected(false); });
 			Reachability.ReachabilityChanged += ReachabilityChanged;
 		}
 
@@ -65,96 +67,169 @@ namespace Plugin.Connectivity
 		/// <summary>
 		/// Gets if there is an active internet connection
 		/// </summary>
-		public override bool IsConnected 
+		public override bool IsConnected
 		{
-			get 
+			get
 			{
-                if (initialTask?.IsCompleted ?? true)
-                {
-                    UpdateConnected(false);
-                    return isConnected;
-                }
+				if (initialTask?.IsCompleted ?? true)
+				{
+					UpdateConnected(false);
+					return isConnected;
+				}
 
 				//await for the initial run to complete
 				initialTask.Wait();
-				return isConnected; 
+				return isConnected;
 			}
 		}
+
 
 		/// <summary>
 		/// Tests if a host name is pingable
 		/// </summary>
 		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-		/// <param name="msTimeout">Timeout in milliseconds</param>
+		/// <param name="timeout">Timeout</param>
 		/// <returns></returns>
-		public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
+		public override Task<bool> IsReachable(string host, TimeSpan timeout)
 		{
-			if (string.IsNullOrEmpty(host))
+			if (string.IsNullOrWhiteSpace(host))
 				throw new ArgumentNullException(nameof(host));
 
-			if (!IsConnected)
-				return false;
+#if __TVOS__
+			return IsRemoteReachable(host, timeout);
+#else
 
-			return await IsRemoteReachable(host, 80, msTimeout);
+
+			try
+			{
+
+				var tcs = new TaskCompletionSource<bool>();
+				var ct = new CancellationTokenSource(timeout);
+
+				var pinger = new SimplePing(host);
+
+				
+				
+				void UnSubscribe()
+				{
+					pinger.Started -= OnStarted;
+					pinger.Failed -= OnFailed;
+					pinger.SendFailed -= OnSendFailed;
+					pinger.ResponseRecieved -= OnResponseRecieved;
+					pinger.UnexpectedResponse -= OnUnexpectedResponse;
+					pinger.Stop();
+				};
+
+				void OnStarted(object sender, SimplePingStartedEventArgs e)
+				{
+					//start up the ping!
+					pinger.SendPing(null);
+				};
+
+				void OnFailed(object sender, SimplePingFailedEventArgs e)
+				{
+					UnSubscribe();
+					tcs.SetResult(false);
+				};
+
+				void OnSendFailed(object sender, SimplePingSendFailedEventArgs e)
+				{
+					UnSubscribe();
+					tcs.SetResult(false);
+				};
+
+				void OnResponseRecieved(object sender, SimplePingResponseRecievedEventArgs e)
+				{
+					UnSubscribe();
+					tcs.SetResult(true);
+				};
+
+				void OnUnexpectedResponse(object sender, SimplePingUnexpectedResponseEventArgs e)
+				{
+					UnSubscribe();
+					tcs.SetResult(false);
+				};
+
+				//Unsubscribe and then set canceled, aka timed out.
+				ct.Token.Register(() =>
+				{
+					UnSubscribe();
+					tcs.TrySetCanceled();
+				}, true);
+
+				pinger.Started += OnStarted;
+				pinger.Failed += OnFailed;
+				pinger.SendFailed += OnSendFailed;
+				pinger.ResponseRecieved += OnResponseRecieved;
+				pinger.UnexpectedResponse += OnUnexpectedResponse;
+
+
+				pinger.Start();
+
+				return tcs.Task;
+
+			}
+			catch (Exception ex)
+			{
+				Debug.WriteLine($"Unable to reach: {host} Error: {ex}");
+			}
+
+			return Task.FromResult(false);
+#endif
 		}
 
 		/// <summary>
-		/// Tests if a remote host name is reachable 
+		/// Tests if a remote uri is reachable
 		/// </summary>
-		/// <param name="host">Host name can be a remote IP or URL of website</param>
-		/// <param name="port">Port to attempt to check is reachable.</param>
-		/// <param name="msTimeout">Timeout in milliseconds.</param>
-		/// <returns></returns>
-		public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout</param>
+		public override Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout)
 		{
-			if (string.IsNullOrEmpty(host))
-				throw new ArgumentNullException(nameof(host));
+			if (uri == null)
+				throw new ArgumentNullException(nameof(uri));
 
-			if (!IsConnected)
-				return false;
-
-			host = host.Replace("http://www.", string.Empty).
-					Replace("http://", string.Empty).
-					Replace("https://www.", string.Empty).
-					Replace("https://", string.Empty).
-					TrimEnd('/');
-
-
-			return await Task.Run(() =>
+			return Task.Run(() =>
 			{
 				try
 				{
 					var clientDone = new ManualResetEvent(false);
+
 					var reachable = false;
 
-					var hostEntry = new DnsEndPoint(host, port);
+					var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
 
 					using (var socket = new Socket(SocketType.Stream, ProtocolType.Tcp))
 					{
 						var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
-						socketEventArg.Completed += (s, e) =>
+
+						void handler(object sender, SocketAsyncEventArgs e)
 						{
 							reachable = e.SocketError == SocketError.Success;
-
+							socketEventArg.Completed -= handler;
 							clientDone.Set();
 						};
+
+						socketEventArg.Completed += handler;
 
 						clientDone.Reset();
 
 						socket.ConnectAsync(socketEventArg);
 
-						clientDone.WaitOne(msTimeout);
+						clientDone.WaitOne(timeout);
 
 						return reachable;
 					}
+
 				}
 				catch (Exception ex)
 				{
-					Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
+					Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
 					return false;
 				}
 			});
 		}
+
+
 
 		/// <summary>
 		/// Gets the list of all active connection types.
@@ -164,30 +239,27 @@ namespace Plugin.Connectivity
 			get
 			{
 				var statuses = Reachability.GetActiveConnectionType();
-                foreach (var status in statuses)
-                {
-                    switch (status)
-                    {
-                        case NetworkStatus.ReachableViaCarrierDataNetwork:
-                            yield return ConnectionType.Cellular;
-                            break;
-                        case NetworkStatus.ReachableViaWiFiNetwork:
-                            yield return ConnectionType.WiFi;
-                            break;
-                        default:
-                            yield return ConnectionType.Other;
-                            break;
-                    }
-                }
+				foreach (var status in statuses)
+				{
+					switch (status)
+					{
+						case NetworkStatus.ReachableViaCarrierDataNetwork:
+							yield return ConnectionType.Cellular;
+							break;
+						case NetworkStatus.ReachableViaWiFiNetwork:
+							yield return ConnectionType.WiFi;
+							break;
+						default:
+							yield return ConnectionType.Other;
+							break;
+					}
+				}
 			}
 		}
 		/// <summary>
 		/// Not supported on iOS
 		/// </summary>
-		public override IEnumerable<UInt64> Bandwidths
-		{
-			get { return new UInt64[] { }; }
-		}
+		public override IEnumerable<UInt64> Bandwidths => new UInt64[] { };
 
 		private bool disposed = false;
 		/// <summary>

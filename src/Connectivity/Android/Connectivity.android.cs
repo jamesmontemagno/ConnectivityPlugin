@@ -8,8 +8,13 @@ using Android.Content;
 using Android.Net;
 using Android.Net.Wifi;
 using Android.App;
-using Java.Net;
+using System.Threading;
+using System.Net;
+using System.Net.Sockets;
 
+
+[assembly: UsesPermission(Android.Manifest.Permission.AccessNetworkState)]
+[assembly: UsesPermission(Android.Manifest.Permission.AccessWifiState)]
 
 namespace Plugin.Connectivity
 {
@@ -59,12 +64,18 @@ namespace Plugin.Connectivity
         {
             try
             {
-
-                //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
-                //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
-                if ((int)Android.OS.Build.VERSION.SdkInt >= 21)
+				var sdkVersion = (int)Android.OS.Build.VERSION.SdkInt;
+				//When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
+				//https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()
+				if (sdkVersion >= 21)
                 {
-                    foreach (var network in manager.GetAllNetworks())
+					var networks = manager.GetAllNetworks();
+					if(networks.Count() == 0 && sdkVersion < 23)
+					{
+						return QueryNetworkInfo();
+					}
+
+					foreach (var network in networks)
                     {
                         try
                         {
@@ -76,13 +87,6 @@ namespace Plugin.Connectivity
 							//check to see if it has the internet capability
 							if (!capabilities.HasCapability(NetCapability.Internet))
 								continue;
-
-							//if on 23+ then we can also check validated
-							//Indicates that connectivity on this network was successfully validated.
-							//this means that you can be connected to wifi and has internet
-							//2/7/18: We are removing this because apparently devices aren't reporting back the correct information :(
-							//if ((int)Android.OS.Build.VERSION.SdkInt >= 23 && !capabilities.HasCapability(NetCapability.Validated))
-							//	continue;
 
 							var info = manager.GetNetworkInfo(network);
 
@@ -100,16 +104,7 @@ namespace Plugin.Connectivity
                 }
                 else
                 {
-#pragma warning disable CS0618 // Type or member is obsolete
-					foreach (var info in manager.GetAllNetworkInfo())
-#pragma warning restore CS0618 // Type or member is obsolete
-					{
-                        if (info == null || !info.IsAvailable)
-                            continue;
-                        
-                        if (info.IsConnected)
-                            return true;
-                    }
+					return QueryNetworkInfo();
                 }
 
                 return false;
@@ -119,6 +114,22 @@ namespace Plugin.Connectivity
                 Debug.WriteLine("Unable to get connected state - do you have ACCESS_NETWORK_STATE permission? - error: {0}", e);
                 return false;
             }
+
+			bool QueryNetworkInfo()
+			{
+#pragma warning disable CS0618 // Type or member is obsolete
+				foreach (var info in manager.GetAllNetworkInfo())
+#pragma warning restore CS0618 // Type or member is obsolete
+				{
+					if (info == null || !info.IsAvailable)
+						continue;
+
+					if (info.IsConnected)
+						return true;
+				}
+
+				return false;
+			}
         }
 
         /// <summary>
@@ -127,28 +138,36 @@ namespace Plugin.Connectivity
         public override bool IsConnected => GetIsConnected(ConnectivityManager);
 
 
-        /// <summary>
-        /// Tests if a host name is pingable
-        /// </summary>
-        /// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-        /// <param name="msTimeout">Timeout in milliseconds</param>
-        /// <returns></returns>
-        public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
+		/// <summary>
+		/// Tests if a host name is pingable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="timespan">Timeout in milliseconds</param>
+		/// <returns></returns>
+		public override Task<bool> IsReachable(string host, TimeSpan timespan)
         {
-            if (string.IsNullOrEmpty(host))
+            if (string.IsNullOrWhiteSpace(host))
                 throw new ArgumentNullException(nameof(host));
 
-            if (!IsConnected)
-                return false;
-
-            return await Task.Run(() =>
+            return Task.Run(() =>
             {
                 bool reachable;
                 try
                 {
-                    reachable = InetAddress.GetByName(host).IsReachable(msTimeout);
+					var inetAddress = Java.Net.InetAddress.GetByName(host);
+
+					//Is reachable only works with IP Addresses, so let's validate first.
+					if(IPAddress.TryParse(host, out IPAddress address))
+					{
+						reachable = inetAddress.IsReachable((int)timespan.TotalMilliseconds);
+					}
+					else
+					{
+						//GetByName actually resolves out the host name, so it must be 
+						reachable = true;
+					}
                 }
-                catch (UnknownHostException ex)
+                catch (Java.Net.UnknownHostException ex)
                 {
                     Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
                     reachable = false;
@@ -163,85 +182,65 @@ namespace Plugin.Connectivity
 
         }
 
-        /// <summary> 
-        /// Tests if a remote host name is reachable 
-        /// </summary>
-        /// <param name="host">Host name can be a remote IP or URL of website</param>
-        /// <param name="port">Port to attempt to check is reachable.</param>
-        /// <param name="msTimeout">Timeout in milliseconds.</param>
-        /// <returns></returns>
-        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000)
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout in milliseconds.</param>
+		/// <returns></returns>
+		public override Task<bool> IsRemoteReachable(System.Uri uri, TimeSpan timeout)
         {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
-            if (string.IsNullOrEmpty(host))
-                throw new ArgumentNullException(nameof(host));
-
-            if (!IsConnected)
-                return false;
-
-            host = host.Replace("http://www.", string.Empty).
-              Replace("http://", string.Empty).
-              Replace("https://www.", string.Empty).
-              Replace("https://", string.Empty).
-              TrimEnd('/');
-
-            return await Task.Run(async () =>
+            return Task.Run(() =>
             {
                 try
                 {
-                    var tcs = new TaskCompletionSource<InetSocketAddress>();
-                    new System.Threading.Thread(() =>
+					var clientDone = new ManualResetEvent(false);
+                    
+                    var reachable = false;
+
+                    var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
+
+                    using (var socket = new Socket(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp))
                     {
-                        /* this line can take minutes when on wifi with poor or none internet connectivity
-                        and Task.Delay solves it only if this is running on new thread (Task.Run does not help) */
-                        InetSocketAddress result = new InetSocketAddress(host, port);
+                        var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
 
-                        if (!tcs.Task.IsCompleted)
-                            tcs.TrySetResult(result);
+                        void handler(object sender, SocketAsyncEventArgs e)
+                        {
+                            reachable = e.SocketError == SocketError.Success;
+                            socketEventArg.Completed -= handler;
+                            clientDone.Set();
+                        };
 
-                    }).Start();
+                        socketEventArg.Completed += handler;
 
-                    Task.Run(async () =>
-                    {
-                        await Task.Delay(msTimeout);
+                        clientDone.Reset();
 
-                        if (!tcs.Task.IsCompleted)
-                            tcs.TrySetResult(null);
-                    });
+                        socket.ConnectAsync(socketEventArg);
 
-                    var sockaddr = await tcs.Task;
+                        clientDone.WaitOne(timeout);
 
-                    if (sockaddr == null)
-                        return false;
-
-                    using (var sock = new Socket())
-                    {
-
-                        await sock.ConnectAsync(sockaddr, msTimeout);
-                        return true;
-
+                        return reachable;
                     }
+                    
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine("Unable to reach: " + host + " Error: " + ex);
+                    Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
                     return false;
                 }
             });
         }
 
-        /// <summary>
-        /// Gets the list of all active connection types.
-        /// </summary>
-        public override IEnumerable<ConnectionType> ConnectionTypes
-        {
-            get
-            {
-                return GetConnectionTypes(ConnectivityManager);
-            }
-        }
+		/// <summary>
+		/// Gets the list of all active connection types.
+		/// </summary>
+		public override IEnumerable<ConnectionType> ConnectionTypes =>
+			GetConnectionTypes(ConnectivityManager).Distinct();
 
-        public static IEnumerable<ConnectionType> GetConnectionTypes(ConnectivityManager manager)
+		public static IEnumerable<ConnectionType> GetConnectionTypes(ConnectivityManager manager)
         {
             //When on API 21+ need to use getAllNetworks, else fall base to GetAllNetworkInfo
             //https://developer.android.com/reference/android/net/ConnectivityManager.html#getAllNetworks()

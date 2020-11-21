@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Tizen.Network.Connection;
 using Tizen.System;
@@ -135,53 +138,77 @@ namespace Plugin.Connectivity
 		/// </summary>
 		public override bool IsConnected => GetIsConnected();
 
-		/// <summary>
-		/// Is Reachable
-		/// </summary>
-		/// <param name="host"></param>
-		/// <param name="msTimeout"></param>
-		/// <returns></returns>
-		public override async Task<bool> IsReachable(string host, int msTimeout = 5000)
-        {
-			if (string.IsNullOrEmpty(host))
+
+		public override async Task<bool> IsReachable(string host, TimeSpan timeout)
+		{
+			if (string.IsNullOrWhiteSpace(host))
 				throw new ArgumentNullException(nameof(host));
 
-			if (!IsConnected)
-				return false;
-
-			return await IsRemoteReachable(host, 80, msTimeout);
-		}
-
-        /// <summary>
-        /// IsReachable
-        /// </summary>
-        /// <param name="host"></param>
-        /// <param name="port"></param>
-        /// <param name="msTimeout"></param>
-        /// <returns></returns>
-        public override async Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 10000)
-        {
-			host = host.Replace("http://www.", string.Empty).
-					Replace("http://", string.Empty).
-					Replace("https://www.", string.Empty).
-					Replace("https://", string.Empty).
-					TrimEnd('/');
+			var pingRequest = new Ping();
 			try
 			{
-				using (var client = new TcpClient())
-				{
-					client.ReceiveTimeout = msTimeout;
-					await client.ConnectAsync(host, port);
-				}
+				var pingReply = await pingRequest.SendPingAsync(host, (int)timeout.TotalMilliseconds);
 
-				return true;
+				if (pingReply != null && pingReply.Status == IPStatus.Success)
+				{
+					return true;
+				}
 			}
 			catch
 			{
-				return false;
+				// Suppressing catch here, if any exception is returned by Ping, consider it as Not reachable.
 			}
+
+			return false;
 		}
 
+		public override Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout)
+		{
+			if (uri == null)
+				throw new ArgumentNullException(nameof(uri));
+
+			return Task.Run(() =>
+			{
+				try
+				{
+					var clientDone = new ManualResetEvent(false);
+
+					var reachable = false;
+
+					var hostEntry = new DnsEndPoint(uri.Host, uri.Port);
+
+					using (var socket = new Socket(System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp))
+					{
+						var socketEventArg = new SocketAsyncEventArgs { RemoteEndPoint = hostEntry };
+
+						void handler(object sender, SocketAsyncEventArgs e)
+						{
+							reachable = e.SocketError == SocketError.Success;
+							socketEventArg.Completed -= handler;
+							clientDone.Set();
+						};
+
+						socketEventArg.Completed += handler;
+
+						clientDone.Reset();
+
+						socket.ConnectAsync(socketEventArg);
+
+						clientDone.WaitOne(timeout);
+
+						return reachable;
+					}
+
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"Unable to reach: {uri} Error: {ex}");
+					return false;
+				}
+			});
+		}
+	
+      
 		private bool disposed = false;
 
 		/// <summary>
@@ -205,5 +232,7 @@ namespace Plugin.Connectivity
 			}
 			base.Dispose(disposing);
         }
-    }
+
+		
+	}
 }

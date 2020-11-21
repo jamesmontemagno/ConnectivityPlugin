@@ -16,25 +16,54 @@ namespace Plugin.Connectivity.Abstractions
         /// Gets if there is an active internet connection
         /// </summary>
         bool IsConnected { get; }
-        /// <summary>
-        /// Tests if a host name is pingable
-        /// </summary>
-        /// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
-        /// <param name="msTimeout">Timeout in milliseconds</param>
-        /// <returns></returns>
-        Task<bool> IsReachable(string host, int msTimeout = 5000);
-        /// <summary>
-        /// Tests if a remote host name is reachable
-        /// </summary>
-        /// <param name="host">Host name can be a remote IP or URL of website</param>
-        /// <param name="port">Port to attempt to check is reachable.</param>
-        /// <param name="msTimeout">Timeout in milliseconds.</param>
-        /// <returns></returns>
-        Task<bool> IsRemoteReachable(string host, int port = 80, int msTimeout = 5000);
-        /// <summary>
-        /// Gets the list of all active connection types.
-        /// </summary>
-        IEnumerable<ConnectionType> ConnectionTypes { get; }
+
+		/// <summary>
+		/// Tests if a host name is reachable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="msTimeout">Timeout</param>
+		/// <returns></returns>
+		Task<bool> IsReachable(string host, int msTimeout = 5000);
+
+		/// <summary>
+		/// Tests if a host name is reachable
+		/// </summary>
+		/// <param name="host">The host name can either be a machine name, such as "java.sun.com", or a textual representation of its IP address (127.0.0.1)</param>
+		/// <param name="timeout">Timeout</param>
+		/// <returns></returns>
+		Task<bool> IsReachable(string host, TimeSpan timeout);
+
+		/// <summary>
+
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="msTimeout">Timeout in milliseconds</param>
+		/// <returns></returns>
+		[Obsolete("This method is now obsolete and replaced with IsRemoteReachable that take in a full Uri. This method will be removed in future revisions.")]
+		Task<bool> IsRemoteReachable(string uri, int port = 80, int msTimeout = 5000);
+
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout</param>
+		/// <returns></returns>
+		Task<bool> IsRemoteReachable(string uri, TimeSpan timeout);
+
+		/// <summary>
+		/// Tests if a remote uri is reachable
+		/// </summary>
+		/// <param name="uri">Full valid Uri to check for reachability</param>
+		/// <param name="timeout">Timeout.</param>
+		/// <returns></returns>
+		Task<bool> IsRemoteReachable(Uri uri, TimeSpan timeout);
+
+		/// <summary>
+		/// Gets the list of all active connection types.
+		/// </summary>
+		IEnumerable<ConnectionType> ConnectionTypes { get; }
         /// <summary>
         /// Retrieves a list of available bandwidths for the platform.
         /// Only active connections.

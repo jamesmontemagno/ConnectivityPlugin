@@ -1,6 +1,8 @@
-### 3.2.0
-* [Android] Fixes for Android #133, #142, #134 around API 23+ Validated check
-* [Android] Fixes for Android #143 for ensuring connectivity changed fires on multiple changes
+## 5.0.0
+* [All] New Implementations of IsReachable and IsRemoteReachable
+* IsReachable: Checks if host is reachable.
+* IsRemoteReachable: Now only takes in a valid Uri with or without a port to check connectivity to a service.
+* IsRemoteReachable: Must have a valid Uri scheme.
 
 ### 3.1.0
 * [Android] Bandwidth as bits per second instead of mbps
